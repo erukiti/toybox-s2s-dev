@@ -1,31 +1,26 @@
 import {connect} from 'react-redux'
 
 import AppComponent from './component'
-import AppAction from './action'
 import {State} from '../reducers'
-import {ActionType, Dispatch} from '../actions'
-
+import {dispatcher, ActionType} from '../actions'
 
 const mapStateToProps = (state: State) => {
     return state
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({dispatch})
+const mapDispatchToProps = (reduxDispatch) => ({reduxDispatch})
 
-export type AppProps = State & AppAction
+// export type AppProps = State & ActionType
 
-const action = new AppAction()
+const mergeProps = (stateProps, {reduxDispatch}, ownProps) => {
+  const dispatch = dispatcher(reduxDispatch)
+  const props = {
+    ...stateProps,
+    ...ownProps,
+    add: (count: number) => dispatch.app.add(count),
+    sub: (count: number) => dispatch.app.sub(count),
+  }
 
-const mergeProps = (stateProps, {dispatch}, ownProps) => {
-  action.dispatch = dispatch
-
-  const props = {...stateProps, ...ownProps}
-
-  Object.getOwnPropertyNames(Object.getPrototypeOf(action)).forEach(name => {
-    if (name !== 'constructor') {
-      props[name] = action[name].bind(action)
-    }
-  })
   return props
 }
 

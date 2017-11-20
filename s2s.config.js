@@ -7,16 +7,11 @@ const metaOpts = {
 }
 
 const metaRule = {
-  'src/renderer/**/reducer.*': {
-    output: '../reducers.ts',
-    plugin: './scripts/reducers-rule',
-  },
-  'src/renderer/**/action.*': {
-    output: '../actions.ts',
-    plugin: './scripts/actions-rule',
-  },
   'src/renderer/**/index.ts': {
     plugin: './scripts/index-rule',
+  },
+  'src/renderer/**/reducer.*': {
+    plugin: './scripts/reducers-rule',
   },
 }
 

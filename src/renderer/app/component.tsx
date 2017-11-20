@@ -1,12 +1,12 @@
 import * as React from 'react'
-import {AppProps} from './index'
+// import {AppProps} from './index'
 
-export default class AppComponent extends React.Component<AppProps> {
+export default class AppComponent extends React.Component<any> {
   render() {
-      console.log(this.props.addCount)
     return <div>
         <div>{this.props.app.count}</div>
-        <button onClick={() => this.props.addCount(1)}>ADD</button>
+        <button onClick={() => this.props.add(1)}>ADD</button>
+        <button onClick={() => this.props.sub(1)}>SUB</button>
     </div>
   }
 }

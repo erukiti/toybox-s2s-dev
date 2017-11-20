@@ -1,31 +1,25 @@
 import {connect} from 'react-redux'
 
 import TopicListComponent from './component'
-import TopicListAction from './action'
 import {State} from '../reducers'
-import {ActionType, Dispatch} from '../actions'
-
+import {dispatcher, ActionType} from '../actions'
 
 const mapStateToProps = (state: State) => {
     return state
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({dispatch})
+const mapDispatchToProps = (reduxDispatch) => ({reduxDispatch})
 
-export type TopicListProps = State & TopicListAction
+// export type TopicListProps = State & ActionType
 
-const action = new TopicListAction()
-
-const mergeProps = (stateProps, {dispatch}, ownProps) => {
-  action.dispatch = dispatch
-
-  const props = {...stateProps, ...ownProps}
-
-  Object.getOwnPropertyNames(Object.getPrototypeOf(action)).forEach(name => {
-    if (name !== 'constructor') {
-      props[name] = action[name].bind(action)
-    }
-  })
+const mergeProps = (stateProps, {reduxDispatch}, ownProps) => {
+  const dispatch = dispatcher(reduxDispatch)
+  const props = {
+    ...stateProps,
+    ...ownProps,
+    add: (label: string, text: string) => dispatch.topicList.add(label, text),
+    remove: (index: number) => dispatch.topicList.remove(index),
+  }
 
   return props
 }

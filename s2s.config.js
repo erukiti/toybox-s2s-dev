@@ -3,7 +3,7 @@ require('ts-node').register()
 const {createPluginsFromMetaRules} = require('s2s-meta-rules')
 
 const metaOpts = {
-  babylonPlugins: ['typescript', 'classProperties']
+  babylonPlugins: ['typescript', 'classProperties', 'objectRestSpread']
 }
 
 const metaRule = {

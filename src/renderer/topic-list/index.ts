@@ -17,8 +17,12 @@ const mergeProps = (stateProps, {reduxDispatch}, ownProps) => {
   const props = {
     ...stateProps,
     ...ownProps,
-    add: (label: string, text: string) => dispatch.topicList.add(label, text),
-    remove: (index: number) => dispatch.topicList.remove(index),
+    newTopic: () => dispatch.topicList.newTopic(),
+    editLabel: (label: string) => dispatch.topicList.editLabel(label),
+    editText: (text: string) => dispatch.topicList.editText(text),
+    done: () => dispatch.topicList.done(),
+    cancel: () => dispatch.topicList.cancel(),
+    remove: (uuid: string) => dispatch.topicList.remove(uuid),
   }
 
   return props

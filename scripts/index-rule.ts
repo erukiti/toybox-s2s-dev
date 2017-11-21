@@ -14,12 +14,15 @@ const indexPlugin = (meta, opts) => {
     const reducerSource =
 `import { ActionType } from '../actions'
 
-const initialState = {
+export type ${upperName}State = {
+
 }
 
-export type ${upperName}State = typeof initialState
+const initialState: ${upperName}State = {
 
-export default function ${upperName}Reducer(state: ${upperName}State = initialState, action: ActionType) {
+}
+
+export default function ${upperName}Reducer(state: ${upperName}State = initialState, action: ActionType): ${upperName}State {
   switch (action.type) {
     default: return state
   }

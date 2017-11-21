@@ -4,8 +4,16 @@ import { Dispatch as ReduxDispatch } from 'redux'
 export type ActionType =
   { type: 'APP_ADD', count: number } |
   { type: 'APP_SUB', count: number } |
-  { type: 'TOPIC_LIST_ADD', label: string, text: string } |
-  { type: 'TOPIC_LIST_REMOVE', index: number }
+  { type: 'TOPIC_LIST_NEW_TOPIC',  } |
+  { type: 'TOPIC_LIST_EDIT_LABEL', label: string } |
+  { type: 'TOPIC_LIST_EDIT_TEXT', text: string } |
+  { type: 'TOPIC_LIST_DONE',  } |
+  { type: 'TOPIC_LIST_CANCEL',  } |
+  { type: 'TOPIC_LIST_REMOVE', uuid: string } |
+  { type: 'WORKING_EDIT_DESC', desc: string } |
+  { type: 'WORKING_EDIT_MEMO', memo: string } |
+  { type: 'WORKING_CHANGE_TOPIC_ID', topicId: string } |
+  { type: 'WORKING_DONE',  }
 
 export const dispatcher = dispatch => {
   return {
@@ -14,8 +22,18 @@ export const dispatcher = dispatch => {
       sub: (count: number) => dispatch({type: 'APP_SUB', count})
     },
     topicList: {
-      add: (label: string, text: string) => dispatch({type: 'TOPIC_LIST_ADD', label, text}),
-      remove: (index: number) => dispatch({type: 'TOPIC_LIST_REMOVE', index})
+      newTopic: () => dispatch({type: 'TOPIC_LIST_NEW_TOPIC', }),
+      editLabel: (label: string) => dispatch({type: 'TOPIC_LIST_EDIT_LABEL', label}),
+      editText: (text: string) => dispatch({type: 'TOPIC_LIST_EDIT_TEXT', text}),
+      done: () => dispatch({type: 'TOPIC_LIST_DONE', }),
+      cancel: () => dispatch({type: 'TOPIC_LIST_CANCEL', }),
+      remove: (uuid: string) => dispatch({type: 'TOPIC_LIST_REMOVE', uuid})
+    },
+    working: {
+      editDesc: (desc: string) => dispatch({type: 'WORKING_EDIT_DESC', desc}),
+      editMemo: (memo: string) => dispatch({type: 'WORKING_EDIT_MEMO', memo}),
+      changeTopicId: (topicId: string) => dispatch({type: 'WORKING_CHANGE_TOPIC_ID', topicId}),
+      done: () => dispatch({type: 'WORKING_DONE', })
     }
   }
 }

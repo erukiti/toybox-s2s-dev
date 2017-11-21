@@ -1,34 +1,96 @@
 import { ActionType } from '../actions'
-type Topics = {
+import * as uuidv4 from 'uuid-v4'
+type Topic = {
   label: string,
-  text: string
+  text: string,
+  uuid: string
 }
-const initialState = {
-  topics: []
+export type TopicListState = {
+  topics: Topic[],
+  editing?: Topic
 }
-export type TopicListState = typeof initialState
+const initialState: TopicListState = {
+  topics: [],
+  editing: null
+}
 
-const add = (_state, label: string, text: string) => {
+const newTopic = (_state: TopicListState): TopicListState => {
   const topic = {
-    label,
+    label: '',
+    text: '',
+    uuid: uuidv4()
+  }
+  return {
+    ..._state,
+    editing: topic
+  }
+}
+
+const editLabel = (_state: TopicListState, label: string): TopicListState => {
+  const topic = {
+    ..._state.editing,
+    label
+  }
+  return {
+    ..._state,
+    editing: topic
+  }
+}
+
+const editText = (_state: TopicListState, text: string): TopicListState => {
+  const topic = {
+    ..._state.editing,
     text
   }
   return {
-    topics: [..._state.topics, topic]
+    ..._state,
+    editing: topic
   }
 }
 
-const remove = (_state, index: number) => {
-  return _state.topics.filter((v, i) => i !== index)
+const done = (_state: TopicListState): TopicListState => {
+  const topics = [..._state.topics.filter(topic => topic.uuid !== _state.editing.uuid), _state.editing]
+  const res = {
+    ..._state,
+    topics,
+    editing: null
+  }
+  return res
 }
 
-export default function TopicListReducer(state: TopicListState = initialState, action: ActionType) {
+const cancel = (_state: TopicListState): TopicListState => {
+  return {
+    ..._state,
+    editing: null
+  }
+}
+
+const remove = (_state: TopicListState, uuid: string): TopicListState => {
+  return {
+    ..._state,
+    topics: _state.topics.filter(topic => topic.uuid !== uuid)
+  }
+}
+
+export default function TopicListReducer(state: TopicListState = initialState, action: ActionType): TopicListState {
   switch (action.type) {
-    case 'TOPIC_LIST_ADD':
-      return add(state, action.label, action.text)
+    case 'TOPIC_LIST_NEW_TOPIC':
+      return newTopic(state)
+
+    case 'TOPIC_LIST_EDIT_LABEL':
+      return editLabel(state, action.label)
+
+    case 'TOPIC_LIST_EDIT_TEXT':
+      return editText(state, action.text)
+
+    case 'TOPIC_LIST_DONE':
+      return done(state)
+
+    case 'TOPIC_LIST_CANCEL':
+      return cancel(state)
 
     case 'TOPIC_LIST_REMOVE':
-      return remove(state, action.index)
+      return remove(state, action.uuid)
 
     default:
       return state

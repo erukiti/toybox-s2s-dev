@@ -72,6 +72,13 @@ const remove = (_state: TopicListState, uuid: string): TopicListState => {
   }
 }
 
+const loadTopics = (_state: TopicListState, topics: any[]): TopicListState => {
+  return {
+    ..._state,
+    topics
+  }
+}
+
 export default function TopicListReducer(state: TopicListState = initialState, action: ActionType): TopicListState {
   switch (action.type) {
     case 'TOPIC_LIST_NEW_TOPIC':
@@ -91,6 +98,9 @@ export default function TopicListReducer(state: TopicListState = initialState, a
 
     case 'TOPIC_LIST_REMOVE':
       return remove(state, action.uuid)
+
+    case 'TOPIC_LIST_LOAD_TOPICS':
+      return loadTopics(state, action.topics)
 
     default:
       return state

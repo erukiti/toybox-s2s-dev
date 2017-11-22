@@ -53,6 +53,13 @@ const done = (_state: WorkingState): WorkingState => {
   }
 }
 
+const loadDoneTasks = (_state: WorkingState, doneTasks: any[]): WorkingState => {
+  return {
+    ..._state,
+    doneTasks
+  }
+}
+
 export default function WorkingReducer(state: WorkingState = initialState, action: ActionType): WorkingState {
   switch (action.type) {
     case 'WORKING_EDIT_DESC':
@@ -66,6 +73,9 @@ export default function WorkingReducer(state: WorkingState = initialState, actio
 
     case 'WORKING_DONE':
       return done(state)
+
+    case 'WORKING_LOAD_DONE_TASKS':
+      return loadDoneTasks(state, action.doneTasks)
 
     default:
       return state

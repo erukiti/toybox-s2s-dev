@@ -23,6 +23,7 @@
     "typescript": "^2.6.1"
   },
   "dependencies": {
+    "mkdirp": "^0.5.1",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-redux": "^5.0.6",

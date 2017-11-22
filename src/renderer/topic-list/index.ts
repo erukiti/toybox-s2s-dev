@@ -33,8 +33,7 @@ const mergeProps = (stateProps, { reduxDispatch }, ownProps) => {
     editText: (text: string) => dispatch.topicList.editText(text),
     done: () => {
       dispatch.topicList.done()
-      const state: State = <any>store.getState()
-      saveTopics('_', state.topicList.topics)
+      saveTopics('_', store.getState().topicList.topics)
     },
     cancel: () => dispatch.topicList.cancel(),
     remove: (uuid: string) => dispatch.topicList.remove(uuid)

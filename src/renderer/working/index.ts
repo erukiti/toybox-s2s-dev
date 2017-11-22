@@ -36,8 +36,7 @@ const mergeProps = (stateProps, { reduxDispatch }, ownProps) => {
         dispatch.working.changeTopicId(props.topicList.topics[0].uuid)
       }
       dispatch.working.done()
-      const state: State = <any>store.getState()
-      saveDoneTasks('_', state.working.doneTasks)
+      saveDoneTasks('_', store.getState().working.doneTasks)
     }
   }
 

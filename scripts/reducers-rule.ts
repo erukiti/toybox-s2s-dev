@@ -94,13 +94,13 @@ ${names.map(name => {
   return `import ${toLowerCamelCase(name)}Reducer, { ${toUpperCamelCase(name)}State } from './${name}/reducer'`
 }).join('\n')}
 
-export default combineReducers({
-${names.map(name => `  ${toLowerCamelCase(name)}: ${toLowerCamelCase(name)}Reducer`). join(',\n')}
-})
-
 export interface State {
 ${names.map(name => `  ${toLowerCamelCase(name)}: ${toUpperCamelCase(name)}State`).join('\n')}
 }
+
+export default combineReducers<State>({
+${names.map(name => `  ${toLowerCamelCase(name)}: ${toLowerCamelCase(name)}Reducer`). join(',\n')}
+})
 `
 
     let result

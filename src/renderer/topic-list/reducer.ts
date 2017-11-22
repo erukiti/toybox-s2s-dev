@@ -85,10 +85,10 @@ export default function TopicListReducer(state: TopicListState = initialState, a
       return newTopic(state)
 
     case 'TOPIC_LIST_EDIT_LABEL':
-      return editLabel(state, action.label)
+      return editLabel(state, action.payload.label)
 
     case 'TOPIC_LIST_EDIT_TEXT':
-      return editText(state, action.text)
+      return editText(state, action.payload.text)
 
     case 'TOPIC_LIST_DONE':
       return done(state)
@@ -97,10 +97,10 @@ export default function TopicListReducer(state: TopicListState = initialState, a
       return cancel(state)
 
     case 'TOPIC_LIST_REMOVE':
-      return remove(state, action.uuid)
+      return remove(state, action.payload.uuid)
 
     case 'TOPIC_LIST_LOAD_TOPICS':
-      return loadTopics(state, action.topics)
+      return loadTopics(state, action.payload.topics)
 
     default:
       return state

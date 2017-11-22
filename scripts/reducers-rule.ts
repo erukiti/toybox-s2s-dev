@@ -55,10 +55,11 @@ const reducersPlugin = (meta, opts) => {
     })
 
     const extractArgs = args => args.map(arg => `${arg.name}: ${arg.type}`).join(', ')
-    const extractArgsWithoutType = args => args.map(arg => arg.name).join(', ')
+    const extractPayload = args => `{${extractArgs(args)}}`
+    const extractPayloadWithoutType = args => `{${args.map(arg => arg.name).join(', ')}}`
 
     const actionTypes = actions.map(action => {
-      return `  { type: '${action.key}', ${extractArgs(action.args)} }`
+      return `{ type: '${action.key}', payload: ${extractPayload(action.args)}, }`
     }).join(' |\n')
 
     const properties = {}
@@ -67,7 +68,7 @@ const reducersPlugin = (meta, opts) => {
         properties[toLowerCamelCase(action.dir)] = {}
       }
 
-      properties[toLowerCamelCase(action.dir)][action.name] = `(${extractArgs(action.args)}) => dispatch({type: '${action.key}', ${extractArgsWithoutType(action.args)}})`
+      properties[toLowerCamelCase(action.dir)][action.name] = `(${extractArgs(action.args)}) => dispatch({type: '${action.key}', payload: ${extractPayloadWithoutType(action.args)}})`
     })
 
     const actionsSource =
@@ -121,7 +122,7 @@ ${names.map(name => `  ${toLowerCamelCase(name)}: ${toLowerCamelCase(name)}Reduc
           const matched = re.exec(fileName)
           if (action.dir === matched[1]) {
             repl[action.key] = t.stringLiteral(action.key)
-            cases.push(`  case ${action.key}: return ${action.name}(state, ${action.args.map(arg => `action.${arg.name}`).join(', ')}) `)
+            cases.push(`  case ${action.key}: return ${action.name}(state, ${action.args.map(arg => `action.payload.${arg.name}`).join(', ')}) `)
           }
         })
         cases.push('  default: return state')

@@ -19,10 +19,10 @@ const sub = (_state, count: number) => {
 export default function AppReducer(state: AppState = initialState, action: ActionType) {
   switch (action.type) {
     case 'APP_ADD':
-      return add(state, action.count)
+      return add(state, action.payload.count)
 
     case 'APP_SUB':
-      return sub(state, action.count)
+      return sub(state, action.payload.count)
 
     default:
       return state

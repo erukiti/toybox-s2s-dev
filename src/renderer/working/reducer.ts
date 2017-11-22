@@ -63,19 +63,19 @@ const loadDoneTasks = (_state: WorkingState, doneTasks: any[]): WorkingState => 
 export default function WorkingReducer(state: WorkingState = initialState, action: ActionType): WorkingState {
   switch (action.type) {
     case 'WORKING_EDIT_DESC':
-      return editDesc(state, action.desc)
+      return editDesc(state, action.payload.desc)
 
     case 'WORKING_EDIT_MEMO':
-      return editMemo(state, action.memo)
+      return editMemo(state, action.payload.memo)
 
     case 'WORKING_CHANGE_TOPIC_ID':
-      return changeTopicId(state, action.topicId)
+      return changeTopicId(state, action.payload.topicId)
 
     case 'WORKING_DONE':
       return done(state)
 
     case 'WORKING_LOAD_DONE_TASKS':
-      return loadDoneTasks(state, action.doneTasks)
+      return loadDoneTasks(state, action.payload.doneTasks)
 
     default:
       return state

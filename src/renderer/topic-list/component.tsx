@@ -1,7 +1,7 @@
 import * as React from 'react'
-// import {TopicListProps} from './index'
+import {TopicListProps} from './index'
 
-export default class TopicListComponent extends React.Component<any> {
+export default class TopicListComponent extends React.Component<TopicListProps> {
   render() {
     const topics = this.props.topicList.topics.map(topic => {
         return <div key={topic.uuid}><span>{topic.label}</span><button key={topic.uuid} onClick={() => this.props.remove(topic.uuid)}>remove</button></div>

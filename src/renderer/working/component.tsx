@@ -1,8 +1,8 @@
 import * as React from 'react'
-// import {WorkingProps} from './index'
+import {WorkingProps} from './index'
 const assert = require('assert')
 
-export default class WorkingComponent extends React.Component<any> {
+export default class WorkingComponent extends React.Component<WorkingProps> {
   render() {
     if (this.props.topicList.topics.length === 0) {
       return <div></div>
@@ -24,14 +24,19 @@ export default class WorkingComponent extends React.Component<any> {
         </option>
       )
     })
+
+    let topicSelect = <div></div>
+    if (this.props.working.topicId) {
+      topicSelect = <select value={this.props.working.topicId} onChange={ev => this.props.changeTopicId(ev.target.value)}>
+        {topicOptions}
+      </select>
+    }
     const doneDisabled = this.props.topicList.topics.length === 0
 
     return (
       <div>
         <input type="text" onChange={ev => this.props.editDesc(ev.target.value)} value={this.props.working.desc} />
-        <select value={this.props.topicId} onChange={ev => this.props.changeTopicId(ev.target.value)}>
-          {topicOptions}
-        </select>
+        {topicSelect}
         <button onClick={() => this.props.done()} disabled={doneDisabled}>done</button>
         <textarea onChange={ev => this.props.editMemo(ev.target.value)} value={this.props.working.memo} />
         <hr/>

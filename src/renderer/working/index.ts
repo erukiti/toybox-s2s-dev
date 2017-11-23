@@ -1,44 +1,42 @@
 import { connect } from 'react-redux'
+import { Dispatch as ReduxDispatch } from 'redux'
 
 import WorkingComponent from './component'
 import { State } from '../reducers'
 import { dispatcher, ActionType } from '../actions'
-
-import { store } from '..'
-import { loadDoneTasks, saveDoneTasks} from '../../handling'
+import WorkingActionCreator from './action'
 
 const mapStateToProps = (state: State) => {
   return state
 }
 
-const mapDispatchToProps = reduxDispatch => ({ reduxDispatch })
+type DispatchProps = {dispatch: ReduxDispatch<ActionType>}
 
-// export type WorkingProps = State & ActionType
+const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch })
+
+export type WorkingProps = State & WorkingActionCreator
+
+const actions = new WorkingActionCreator()
 
 let isFirst = true
 
-const mergeProps = (stateProps, { reduxDispatch }, ownProps) => {
-  const dispatch = dispatcher(reduxDispatch)
-
-  if (isFirst) {
-    dispatch.working.loadDoneTasks(loadDoneTasks('_'))
+const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) => {
+  actions._dispatch = dispatcher(dispatch)
+  if (isFirst && '_first' in actions) {
+    actions['_first']()
     isFirst = false
   }
 
   const props = {
     ...stateProps,
-    ...ownProps,
-    editDesc: (desc: string) => dispatch.working.editDesc(desc),
-    editMemo: (memo: string) => dispatch.working.editMemo(memo),
-    changeTopicId: (topicId: string) => dispatch.working.changeTopicId(topicId),
-    done: () => {
-      if (props.topicId == null) {
-        dispatch.working.changeTopicId(props.topicList.topics[0].uuid)
-      }
-      dispatch.working.done()
-      saveDoneTasks('_', store.getState().working.doneTasks)
-    }
+    ...ownProps
   }
+
+  Object.getOwnPropertyNames(Object.getPrototypeOf(actions))
+    .filter(key => key !== 'constructor')
+    .forEach(key => {
+      props[key] = actions[key].bind(actions)
+    })
 
   return props
 }

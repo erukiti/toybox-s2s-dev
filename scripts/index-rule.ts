@@ -11,6 +11,23 @@ const indexPlugin = (meta, opts) => {
     const name = arr[arr.length - 1]
     const upperName = toUpperCamelCase(name)
 
+    const actionSource = 
+`import { loadDoneTasks, saveDoneTasks } from '../../handling'
+import { store } from '../'
+import { dispatcher, ActionType } from '../actions'
+import { Dispatch as ReduxDispatch } from 'redux'
+
+export default class ${upperName}ActionCreator {
+  _dispatch
+
+  _first() {
+
+  }
+
+
+}
+`
+
     const reducerSource =
 `import { ActionType } from '../actions'
 
@@ -31,9 +48,9 @@ export default function ${upperName}Reducer(state: ${upperName}State = initialSt
 
     const componentSource =
 `import * as React from 'react'
-// import {${upperName}Props} from './index'
+import {${upperName}Props} from './index'
 
-export default class ${upperName}Component extends React.Component<any> {
+export default class ${upperName}Component extends React.Component<${upperName}Props> {
   render() {
     return <div>
     </div>
@@ -42,26 +59,46 @@ export default class ${upperName}Component extends React.Component<any> {
 `
 
     const indexSource =
-`import {connect} from 'react-redux'
+`import { connect } from 'react-redux'
+import { Dispatch as ReduxDispatch } from 'redux'
 
 import ${upperName}Component from './component'
-import {State} from '../reducers'
-import {dispatcher, ActionType} from '../actions'
+import { State } from '../reducers'
+import { dispatcher, ActionType } from '../actions'
+import ${upperName}ActionCreator from './action'
+
 
 const mapStateToProps = (state: State) => {
     return state
 }
 
-const mapDispatchToProps = (reduxDispatch) => ({reduxDispatch})
+type DispatchProps = {dispatch: ReduxDispatch<ActionType>}
 
-// export type ${upperName}Props = State & ActionType
+const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch })
 
-const mergeProps = (stateProps, {reduxDispatch}, ownProps) => {
-  const dispatch = dispatcher(reduxDispatch)
+export type ${upperName}Props = State & ${upperName}ActionCreator
+
+const actions = new ${upperName}ActionCreator()
+
+let isFirst = true
+
+const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) => {
+  actions._dispatch = dispatcher(dispatch)
+  if (isFirst && '_first' in actions) {
+    actions.['_first']()
+    isFirst = false
+  }
+
   const props = {
     ...stateProps,
-    ...ownProps,
+    ...ownProps
   }
+
+  Object.getOwnPropertyNames(Object.getPrototypeOf(actions))
+    .filter(key => key !== 'constructor' && key.substr(0, 1) !== '_')
+    .forEach(key => {
+      props[key] = actions[key].bind(actions)
+    })
 
   return props
 }
@@ -69,6 +106,7 @@ const mergeProps = (stateProps, {reduxDispatch}, ownProps) => {
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(${upperName}Component)
 `
 
+    createFileSync(path.join(path.dirname(fileName), 'action.ts'), actionSource)
     createFileSync(path.join(path.dirname(fileName), 'reducer.ts'), reducerSource)
     createFileSync(path.join(path.dirname(fileName), 'component.tsx'), componentSource)
     return indexSource

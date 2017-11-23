@@ -2,6 +2,7 @@ import * as fs from 'fs'
 
 export const createFileSync = (filename, content) => {
   if (fs.existsSync(filename)) {
+    console.log(`already exists: ${filename}`)
     return
   }
   fs.writeFileSync(filename, content)

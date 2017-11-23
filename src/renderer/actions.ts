@@ -2,8 +2,6 @@
 import { Dispatch as ReduxDispatch } from 'redux'
 
 export type ActionType =
-{ type: 'APP_ADD', payload: {count: number}, } |
-{ type: 'APP_SUB', payload: {count: number}, } |
 { type: 'TOPIC_LIST_NEW_TOPIC', payload: {}, } |
 { type: 'TOPIC_LIST_EDIT_LABEL', payload: {label: string}, } |
 { type: 'TOPIC_LIST_EDIT_TEXT', payload: {text: string}, } |
@@ -17,12 +15,8 @@ export type ActionType =
 { type: 'WORKING_DONE', payload: {}, } |
 { type: 'WORKING_LOAD_DONE_TASKS', payload: {doneTasks: any[]}, }
 
-export const dispatcher = dispatch => {
+export const dispatcher = (dispatch: ReduxDispatch<ActionType> => {
   return {
-    app: {
-      add: (count: number) => dispatch({type: 'APP_ADD', payload: {count}}),
-      sub: (count: number) => dispatch({type: 'APP_SUB', payload: {count}})
-    },
     topicList: {
       newTopic: () => dispatch({type: 'TOPIC_LIST_NEW_TOPIC', payload: {}}),
       editLabel: (label: string) => dispatch({type: 'TOPIC_LIST_EDIT_LABEL', payload: {label}}),

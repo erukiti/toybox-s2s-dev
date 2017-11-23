@@ -1,25 +1,43 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+import { Dispatch as ReduxDispatch } from 'redux'
 
 import AppComponent from './component'
-import {State} from '../reducers'
-import {dispatcher, ActionType} from '../actions'
+import { State } from '../reducers'
+import { dispatcher, ActionType } from '../actions'
+
+import AppActionCreator from './action'
 
 const mapStateToProps = (state: State) => {
     return state
 }
 
-const mapDispatchToProps = (reduxDispatch) => ({reduxDispatch})
+type DispatchProps = {dispatch: ReduxDispatch<ActionType>}
 
-// export type AppProps = State & ActionType
+const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch })
 
-const mergeProps = (stateProps, {reduxDispatch}, ownProps) => {
-  const dispatch = dispatcher(reduxDispatch)
+export type AppProps = State & AppActionCreator
+
+const actions = new AppActionCreator()
+
+let isFirst = true
+
+const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) => {
+  actions._dispatch = dispatcher(dispatch)
+  if (isFirst && '_first' in actions) {
+    actions.['_first']()
+    isFirst = false
+  }
+
   const props = {
     ...stateProps,
-    ...ownProps,
-    add: (count: number) => dispatch.app.add(count),
-    sub: (count: number) => dispatch.app.sub(count),
+    ...ownProps
   }
+
+  Object.getOwnPropertyNames(Object.getPrototypeOf(actions))
+    .filter(key => key !== 'constructor' && key.substr(0, 1) !== '_')
+    .forEach(key => {
+      props[key] = actions[key].bind(actions)
+    })
 
   return props
 }

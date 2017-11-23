@@ -78,7 +78,7 @@ import { Dispatch as ReduxDispatch } from 'redux'
 export type ActionType =
 ${actionTypes}
 
-export const dispatcher = dispatch => {
+export const dispatcher = (dispatch: ReduxDispatch<ActionType> => {
   return {
 ${Object.keys(properties).map(key => `    ${key}: {
 ${Object.keys(properties[key]).map(key2 => `      ${key2}: ${properties[key][key2]}`).join(',\n')}

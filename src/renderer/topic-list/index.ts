@@ -1,43 +1,43 @@
 import { connect } from 'react-redux'
+import { Dispatch as ReduxDispatch } from 'redux'
 
 import TopicListComponent from './component'
 import { State } from '../reducers'
 import { dispatcher, ActionType } from '../actions'
-
-import { store } from '..'
-import { loadTopics, saveTopics } from '../../handling'
+import TopicListActionCreator from './action'
 
 const mapStateToProps = (state: State) => {
   return state
 }
 
-const mapDispatchToProps = reduxDispatch => ({ reduxDispatch })
+type DispatchProps = { dispatch: ReduxDispatch<ActionType> }
 
-// export type TopicListProps = State & ActionType
+const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch })
+
+export type TopicListProps = State & TopicListActionCreator
+
+const actions = new TopicListActionCreator()
 
 let isFirst = true
 
-const mergeProps = (stateProps, { reduxDispatch }, ownProps) => {
-  const dispatch = dispatcher(reduxDispatch)
+const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) => {
+  actions._dispatch = dispatcher(dispatch)
 
-  if (isFirst) {
-    dispatch.topicList.loadTopics(loadTopics('_'))
+  if (isFirst && '_first' in actions) {
+    actions['_first']()
     isFirst = false
   }
 
   const props = {
     ...stateProps,
-    ...ownProps,
-    newTopic: () => dispatch.topicList.newTopic(),
-    editLabel: (label: string) => dispatch.topicList.editLabel(label),
-    editText: (text: string) => dispatch.topicList.editText(text),
-    done: () => {
-      dispatch.topicList.done()
-      saveTopics('_', store.getState().topicList.topics)
-    },
-    cancel: () => dispatch.topicList.cancel(),
-    remove: (uuid: string) => dispatch.topicList.remove(uuid)
+    ...ownProps
   }
+
+  Object.getOwnPropertyNames(Object.getPrototypeOf(actions))
+    .filter(key => key !== 'constructor')
+    .forEach(key => {
+      props[key] = actions[key].bind(actions)
+    })
 
   return props
 }

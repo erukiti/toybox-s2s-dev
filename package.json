@@ -1,6 +1,6 @@
 {
-  "name": "handling",
-  "version": "1.0.0",
+  "name": "toybox-s2s-dev",
+  "version": "0.1.0",
   "main": "src/app.js",
   "license": "MIT",
   "scripts": {

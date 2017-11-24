@@ -8,8 +8,8 @@ let win
 
 app.on('ready', () => {
     win = new BrowserWindow({
-        width: 800,
-        height: 600
+        width: 1400,
+        height: 1000
     })
     win.loadURL(`file://${__dirname}/renderer/index.html`)
     win.on('closed', () => {

@@ -8,6 +8,7 @@ export default class AppComponent extends React.Component<AppProps> {
     return (
       <div>
         <TopicList />
+        <hr />
         <Working />
       </div>
     )

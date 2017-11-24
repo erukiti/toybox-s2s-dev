@@ -1,4 +1,4 @@
-// GENERATED!!
+// GENERATED! DON'T TOUCH ME!
 import { Dispatch as ReduxDispatch } from 'redux'
 
 export type ActionType =
@@ -15,23 +15,46 @@ export type ActionType =
 { type: 'WORKING_DONE', payload: {}, } |
 { type: 'WORKING_LOAD_DONE_TASKS', payload: {doneTasks: any[]}, }
 
-export const dispatcher = (dispatch: ReduxDispatch<ActionType> => {
-  return {
-    topicList: {
-      newTopic: () => dispatch({type: 'TOPIC_LIST_NEW_TOPIC', payload: {}}),
-      editLabel: (label: string) => dispatch({type: 'TOPIC_LIST_EDIT_LABEL', payload: {label}}),
-      editText: (text: string) => dispatch({type: 'TOPIC_LIST_EDIT_TEXT', payload: {text}}),
-      done: () => dispatch({type: 'TOPIC_LIST_DONE', payload: {}}),
-      cancel: () => dispatch({type: 'TOPIC_LIST_CANCEL', payload: {}}),
-      remove: (uuid: string) => dispatch({type: 'TOPIC_LIST_REMOVE', payload: {uuid}}),
-      loadTopics: (topics: any[]) => dispatch({type: 'TOPIC_LIST_LOAD_TOPICS', payload: {topics}})
+export class Dispatcher {
+  private _dispatch: ReduxDispatch<ActionType>
+
+  topicList: {
+    newTopic: () => void,
+    editLabel: (label: string) => void,
+    editText: (text: string) => void,
+    done: () => void,
+    cancel: () => void,
+    remove: (uuid: string) => void,
+    loadTopics: (topics: any[]) => void
+  }
+  working: {
+    editDesc: (desc: string) => void,
+    editMemo: (memo: string) => void,
+    changeTopicId: (topicId: string) => void,
+    done: () => void,
+    loadDoneTasks: (doneTasks: any[]) => void
+  }
+
+  constructor() {
+    this.topicList = {
+      newTopic: () => this._dispatch({type: 'TOPIC_LIST_NEW_TOPIC', payload: {}}),
+      editLabel: (label: string) => this._dispatch({type: 'TOPIC_LIST_EDIT_LABEL', payload: {label}}),
+      editText: (text: string) => this._dispatch({type: 'TOPIC_LIST_EDIT_TEXT', payload: {text}}),
+      done: () => this._dispatch({type: 'TOPIC_LIST_DONE', payload: {}}),
+      cancel: () => this._dispatch({type: 'TOPIC_LIST_CANCEL', payload: {}}),
+      remove: (uuid: string) => this._dispatch({type: 'TOPIC_LIST_REMOVE', payload: {uuid}}),
+      loadTopics: (topics: any[]) => this._dispatch({type: 'TOPIC_LIST_LOAD_TOPICS', payload: {topics}})
     },
-    working: {
-      editDesc: (desc: string) => dispatch({type: 'WORKING_EDIT_DESC', payload: {desc}}),
-      editMemo: (memo: string) => dispatch({type: 'WORKING_EDIT_MEMO', payload: {memo}}),
-      changeTopicId: (topicId: string) => dispatch({type: 'WORKING_CHANGE_TOPIC_ID', payload: {topicId}}),
-      done: () => dispatch({type: 'WORKING_DONE', payload: {}}),
-      loadDoneTasks: (doneTasks: any[]) => dispatch({type: 'WORKING_LOAD_DONE_TASKS', payload: {doneTasks}})
+    this.working = {
+      editDesc: (desc: string) => this._dispatch({type: 'WORKING_EDIT_DESC', payload: {desc}}),
+      editMemo: (memo: string) => this._dispatch({type: 'WORKING_EDIT_MEMO', payload: {memo}}),
+      changeTopicId: (topicId: string) => this._dispatch({type: 'WORKING_CHANGE_TOPIC_ID', payload: {topicId}}),
+      done: () => this._dispatch({type: 'WORKING_DONE', payload: {}}),
+      loadDoneTasks: (doneTasks: any[]) => this._dispatch({type: 'WORKING_LOAD_DONE_TASKS', payload: {doneTasks}})
     }
+  }
+
+  setDispatch(dispatch: ReduxDispatch<ActionType>) {
+    this._dispatch = dispatch
   }
 }

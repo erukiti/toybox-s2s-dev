@@ -1,10 +1,18 @@
 import { loadDoneTasks, saveDoneTasks } from '../../handling'
 import { store } from '../'
-import { dispatcher, ActionType } from '../actions'
-import { Dispatch as ReduxDispatch } from 'redux'
+import { Dispatcher } from '../actions'
+
 
 export default class AppActionCreator {
-  _dispatch
+  _dispatch: Dispatcher
+
+  constructor(dispatcher: Dispatcher) {
+    this._dispatch = dispatcher
+  }
+
+  _first() {
+
+  }
 
 
 }

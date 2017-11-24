@@ -14,11 +14,15 @@ const indexPlugin = (meta, opts) => {
     const actionSource = 
 `import { loadDoneTasks, saveDoneTasks } from '../../handling'
 import { store } from '../'
-import { dispatcher, ActionType } from '../actions'
-import { Dispatch as ReduxDispatch } from 'redux'
+import { Dispatcher } from '../actions'
+
 
 export default class ${upperName}ActionCreator {
-  _dispatch
+  _dispatch: Dispatcher
+
+  constructor(dispatcher: Dispatcher) {
+    this._dispatch = dispatcher
+  }
 
   _first() {
 
@@ -64,9 +68,8 @@ import { Dispatch as ReduxDispatch } from 'redux'
 
 import ${upperName}Component from './component'
 import { State } from '../reducers'
-import { dispatcher, ActionType } from '../actions'
+import { Dispatcher, ActionType } from '../actions'
 import ${upperName}ActionCreator from './action'
-
 
 const mapStateToProps = (state: State) => {
     return state
@@ -78,14 +81,15 @@ const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch 
 
 export type ${upperName}Props = State & ${upperName}ActionCreator
 
-const actions = new ${upperName}ActionCreator()
+const dispatcher = new Dispatcher()
+const actions = new ${upperName}ActionCreator(dispatcher)
 
 let isFirst = true
 
 const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) => {
-  actions._dispatch = dispatcher(dispatch)
+  dispatcher.setDispatch(dispatch)
   if (isFirst && '_first' in actions) {
-    actions.['_first']()
+    actions['_first']()
     isFirst = false
   }
 

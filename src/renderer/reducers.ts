@@ -1,4 +1,4 @@
-// GENERATED!!
+// GENERATED! DON'T TOUCH ME!
 import { combineReducers } from 'redux'
 
 import appReducer, { AppState } from './app/reducer'

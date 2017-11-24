@@ -3,8 +3,7 @@ import { Dispatch as ReduxDispatch } from 'redux'
 
 import AppComponent from './component'
 import { State } from '../reducers'
-import { dispatcher, ActionType } from '../actions'
-
+import { Dispatcher, ActionType } from '../actions'
 import AppActionCreator from './action'
 
 const mapStateToProps = (state: State) => {
@@ -17,14 +16,15 @@ const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch 
 
 export type AppProps = State & AppActionCreator
 
-const actions = new AppActionCreator()
+const dispatcher = new Dispatcher()
+const actions = new AppActionCreator(dispatcher)
 
 let isFirst = true
 
 const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) => {
-  actions._dispatch = dispatcher(dispatch)
+  dispatcher.setDispatch(dispatch)
   if (isFirst && '_first' in actions) {
-    actions.['_first']()
+    actions['_first']()
     isFirst = false
   }
 

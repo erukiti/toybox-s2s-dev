@@ -1,9 +1,13 @@
 import { store } from '..'
 import { loadTopics, saveTopics } from '../../handling'
+import { Dispatcher } from '../actions'
 
 export default class TopicListActionCreator {
-  _dispatch
+  private _dispatch: Dispatcher
 
+  constructor(dispatch: Dispatcher) {
+    this._dispatch = dispatch
+  }
   _first() {
     this._dispatch.topicList.loadTopics(loadTopics('_'))
   }

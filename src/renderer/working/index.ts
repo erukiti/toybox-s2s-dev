@@ -3,7 +3,7 @@ import { Dispatch as ReduxDispatch } from 'redux'
 
 import WorkingComponent from './component'
 import { State } from '../reducers'
-import { dispatcher, ActionType } from '../actions'
+import { Dispatcher, ActionType } from '../actions'
 import WorkingActionCreator from './action'
 
 const mapStateToProps = (state: State) => {
@@ -16,12 +16,13 @@ const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch 
 
 export type WorkingProps = State & WorkingActionCreator
 
-const actions = new WorkingActionCreator()
+const dispatcher = new Dispatcher()
+const actions = new WorkingActionCreator(dispatcher)
 
 let isFirst = true
 
 const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) => {
-  actions._dispatch = dispatcher(dispatch)
+  dispatcher.setDispatch(dispatch)
   if (isFirst && '_first' in actions) {
     actions['_first']()
     isFirst = false

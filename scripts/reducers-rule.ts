@@ -68,27 +68,40 @@ const reducersPlugin = (meta, opts) => {
         properties[toLowerCamelCase(action.dir)] = {}
       }
 
-      properties[toLowerCamelCase(action.dir)][action.name] = `(${extractArgs(action.args)}) => dispatch({type: '${action.key}', payload: ${extractPayloadWithoutType(action.args)}})`
+      properties[toLowerCamelCase(action.dir)][action.name] = {
+        args: `(${extractArgs(action.args)})`,
+        dispatch: `this._dispatch({type: '${action.key}', payload: ${extractPayloadWithoutType(action.args)}})`
+      }
     })
 
     const actionsSource =
-`// GENERATED!!
+`// GENERATED! DON'T TOUCH ME!
 import { Dispatch as ReduxDispatch } from 'redux'
 
 export type ActionType =
 ${actionTypes}
 
-export const dispatcher = (dispatch: ReduxDispatch<ActionType> => {
-  return {
-${Object.keys(properties).map(key => `    ${key}: {
-${Object.keys(properties[key]).map(key2 => `      ${key2}: ${properties[key][key2]}`).join(',\n')}
+export class Dispatcher {
+  private _dispatch: ReduxDispatch<ActionType>
+
+${Object.keys(properties).map(key => `  ${key}: {
+${Object.keys(properties[key]).map(methodName => `    ${methodName}: ${properties[key][methodName].args} => void`).join(',\n')}
+  }`).join('\n')}
+
+  constructor() {
+${Object.keys(properties).map(key => `    this.${key} = {
+${Object.keys(properties[key]).map(methodName => `      ${methodName}: ${properties[key][methodName].args} => ${properties[key][methodName].dispatch}`).join(',\n')}
     }`).join(',\n')}
+  }
+
+  setDispatch(dispatch: ReduxDispatch<ActionType>) {
+    this._dispatch = dispatch
   }
 }
 `
 
     const reducersSource =
-`// GENERATED!!
+`// GENERATED! DON'T TOUCH ME!
 import { combineReducers } from 'redux'
 
 ${names.map(name => {

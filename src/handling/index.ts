@@ -2,6 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const mkdirp = require('mkdirp')
 
+// FIXME save/load に統合する
+
 export const saveTopics = (basedir: string, topics: any[]) => {
   mkdirp.sync(basedir)
   const filepath = path.join(basedir, 'topics.json')

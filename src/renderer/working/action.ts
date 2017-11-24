@@ -12,9 +12,6 @@ export default class WorkingActionCreator {
   _first() {
     const state = store.getState()
     this._dispatch.working.loadDoneTasks(loadDoneTasks('_'))
-    if (state.topicList.topics.length > 0) {
-      this._dispatch.working.changeTopicId(state.topicList.topics[0].uuid)
-    }
   }
 
   editDesc(desc: string) {
@@ -25,16 +22,12 @@ export default class WorkingActionCreator {
     this._dispatch.working.editMemo(memo)
   }
 
-  changeTopicId(topicId: string) {
-    this._dispatch.working.changeTopicId(topicId)
+  checkTopicId(topicId: string) {
+    this._dispatch.working.checkTopicId(topicId)
   }
   done() {
-    const state = store.getState()
-
-    if (state.working.topicId == null) {
-      this._dispatch.working.changeTopicId(state.topicList.topics[0].uuid)
-    }
     this._dispatch.working.done()
+    const state = store.getState()
     saveDoneTasks('_', state.working.doneTasks)
   }
 }

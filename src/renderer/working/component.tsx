@@ -9,11 +9,18 @@ export default class WorkingComponent extends React.Component<WorkingProps> {
     }
 
     const doneTasks = this.props.working.doneTasks.map((task, i) => {
-      const topic = this.props.topicList.topics.find(topic => topic.uuid === task.topicId)
-      assert(topic != null)
+      const labels = task.topicIds.map(id => {
+        const topic = this.props.topicList.topics.find(topic => id === topic.uuid)
+        if (topic) {
+          return topic.label
+        } else {
+          return `unknown topic: ${topic.uuid}`
+        }
+      }).join(', ')
+
       return (
         <div key={i}>
-          <span>{task.desc}</span>:<span>{topic.label}</span>
+          <span>{task.desc}</span>: <span>{labels}</span>
         </div>
       )
     })
@@ -25,12 +32,11 @@ export default class WorkingComponent extends React.Component<WorkingProps> {
       )
     })
 
-    let topicSelect = <div></div>
-    if (this.props.working.topicId) {
-      topicSelect = <select value={this.props.working.topicId} onChange={ev => this.props.changeTopicId(ev.target.value)}>
-        {topicOptions}
-      </select>
-    }
+    const topicSelect = this.props.topicList.topics.map(topic => {
+      const checked = this.props.working.topicIds.includes(topic.uuid)
+      return <span key={topic.uuid}><input type="checkbox" checked={checked} onChange={() => this.props.checkTopicId(topic.uuid)}/> {topic.label}</span>
+    })
+
     const doneDisabled = this.props.topicList.topics.length === 0
 
     return (

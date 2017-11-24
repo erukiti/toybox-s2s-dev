@@ -2,18 +2,18 @@ import { ActionType } from '../actions'
 type Task = {
   desc: string,
   memo: string,
-  topicId: string
+  topicIds: string[]
 }
 export type WorkingState = {
   desc: string,
   memo: string,
-  topicId?: string,
+  topicIds: string[],
   doneTasks: Task[]
 }
 const initialState: WorkingState = {
   desc: '',
   memo: '',
-  topicId: null,
+  topicIds: [],
   doneTasks: []
 }
 
@@ -31,10 +31,18 @@ const editMemo = (_state: WorkingState, memo: string): WorkingState => {
   }
 }
 
-const changeTopicId = (_state: WorkingState, topicId: string): WorkingState => {
+const checkTopicId = (_state: WorkingState, topicId: string): WorkingState => {
+  let topicIds
+
+  if (_state.topicIds.includes(topicId)) {
+    topicIds = _state.topicIds.filter(id => id !== topicId)
+  } else {
+    topicIds = [..._state.topicIds, topicId]
+  }
+
   return {
     ..._state,
-    topicId
+    topicIds
   }
 }
 
@@ -42,7 +50,7 @@ const done = (_state: WorkingState): WorkingState => {
   const task: Task = {
     desc: _state.desc,
     memo: _state.memo,
-    topicId: _state.topicId
+    topicIds: _state.topicIds
   }
   const doneTasks: Task[] = [..._state.doneTasks, task]
   return {
@@ -68,8 +76,8 @@ export default function WorkingReducer(state: WorkingState = initialState, actio
     case 'WORKING_EDIT_MEMO':
       return editMemo(state, action.payload.memo)
 
-    case 'WORKING_CHANGE_TOPIC_ID':
-      return changeTopicId(state, action.payload.topicId)
+    case 'WORKING_CHECK_TOPIC_ID':
+      return checkTopicId(state, action.payload.topicId)
 
     case 'WORKING_DONE':
       return done(state)

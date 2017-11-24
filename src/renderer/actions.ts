@@ -11,7 +11,7 @@ export type ActionType =
 { type: 'TOPIC_LIST_LOAD_TOPICS', payload: {topics: any[]}, } |
 { type: 'WORKING_EDIT_DESC', payload: {desc: string}, } |
 { type: 'WORKING_EDIT_MEMO', payload: {memo: string}, } |
-{ type: 'WORKING_CHANGE_TOPIC_ID', payload: {topicId: string}, } |
+{ type: 'WORKING_CHECK_TOPIC_ID', payload: {topicId: string}, } |
 { type: 'WORKING_DONE', payload: {}, } |
 { type: 'WORKING_LOAD_DONE_TASKS', payload: {doneTasks: any[]}, }
 
@@ -30,7 +30,7 @@ export class Dispatcher {
   working: {
     editDesc: (desc: string) => void,
     editMemo: (memo: string) => void,
-    changeTopicId: (topicId: string) => void,
+    checkTopicId: (topicId: string) => void,
     done: () => void,
     loadDoneTasks: (doneTasks: any[]) => void
   }
@@ -48,7 +48,7 @@ export class Dispatcher {
     this.working = {
       editDesc: (desc: string) => this._dispatch({type: 'WORKING_EDIT_DESC', payload: {desc}}),
       editMemo: (memo: string) => this._dispatch({type: 'WORKING_EDIT_MEMO', payload: {memo}}),
-      changeTopicId: (topicId: string) => this._dispatch({type: 'WORKING_CHANGE_TOPIC_ID', payload: {topicId}}),
+      checkTopicId: (topicId: string) => this._dispatch({type: 'WORKING_CHECK_TOPIC_ID', payload: {topicId}}),
       done: () => this._dispatch({type: 'WORKING_DONE', payload: {}}),
       loadDoneTasks: (doneTasks: any[]) => this._dispatch({type: 'WORKING_LOAD_DONE_TASKS', payload: {doneTasks}})
     }

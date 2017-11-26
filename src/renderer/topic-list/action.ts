@@ -1,3 +1,5 @@
+const assert = require('assert')
+
 import { store } from '..'
 import { loadTopics, saveTopics } from '../../handling'
 import { Dispatcher } from '../actions'
@@ -20,10 +22,6 @@ export default class TopicListActionCreator {
     this._dispatch.topicList.editLabel(label)
   }
 
-  editText(text: string) {
-    this._dispatch.topicList.editText(text)
-  }
-
   done() {
     this._dispatch.topicList.done()
     saveTopics('_', store.getState().topicList.topics)
@@ -35,5 +33,13 @@ export default class TopicListActionCreator {
 
   remove(uuid: string) {
     this._dispatch.topicList.remove(uuid)
+  }
+
+  startRef(uuid: string) {
+    const state = store.getState()
+    const topic = state.topicList.topics.find(topic => topic.uuid === uuid)
+    assert(topic)
+    this._dispatch.topicReference.start(topic.uuid, topic.label, topic.text)
+    this._dispatch.app.changeMode('topic')
   }
 }

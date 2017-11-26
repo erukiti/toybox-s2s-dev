@@ -74,6 +74,8 @@ const reducersPlugin = (meta, opts) => {
       }
     })
 
+// FIXME: types.ts を parse して全部 import する
+
     const actionsSource =
 `// GENERATED! DON'T TOUCH ME!
 import { Dispatch as ReduxDispatch } from 'redux'

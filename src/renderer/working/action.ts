@@ -10,8 +10,6 @@ export default class WorkingActionCreator {
   }
 
   _first() {
-    const state = store.getState()
-    this._dispatch.working.loadDoneTasks(loadDoneTasks('_'))
   }
 
   editDesc(desc: string) {
@@ -26,8 +24,9 @@ export default class WorkingActionCreator {
     this._dispatch.working.checkTopicId(topicId)
   }
   done() {
-    this._dispatch.working.done()
     const state = store.getState()
-    saveDoneTasks('_', state.working.doneTasks)
+    this._dispatch.doneList.add(state.working.desc, state.working.memo, state.working.topicIds)
+    this._dispatch.working.clear()
+    saveDoneTasks('_', state.doneList.tasks)
   }
 }

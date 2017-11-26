@@ -1,20 +1,14 @@
 import { ActionType } from '../actions'
-type Task = {
+import { Task } from '../types'
+export type WorkingState = {
   desc: string,
   memo: string,
   topicIds: string[]
 }
-export type WorkingState = {
-  desc: string,
-  memo: string,
-  topicIds: string[],
-  doneTasks: Task[]
-}
 const initialState: WorkingState = {
   desc: '',
   memo: '',
-  topicIds: [],
-  doneTasks: []
+  topicIds: []
 }
 
 const editDesc = (_state: WorkingState, desc: string): WorkingState => {
@@ -46,27 +40,7 @@ const checkTopicId = (_state: WorkingState, topicId: string): WorkingState => {
   }
 }
 
-const done = (_state: WorkingState): WorkingState => {
-  const task: Task = {
-    desc: _state.desc,
-    memo: _state.memo,
-    topicIds: _state.topicIds
-  }
-  const doneTasks: Task[] = [..._state.doneTasks, task]
-  return {
-    ..._state,
-    desc: '',
-    memo: '',
-    doneTasks
-  }
-}
-
-const loadDoneTasks = (_state: WorkingState, doneTasks: any[]): WorkingState => {
-  return {
-    ..._state,
-    doneTasks
-  }
-}
+const clear = (_state: WorkingState): WorkingState => initialState
 
 export default function WorkingReducer(state: WorkingState = initialState, action: ActionType): WorkingState {
   switch (action.type) {
@@ -79,11 +53,8 @@ export default function WorkingReducer(state: WorkingState = initialState, actio
     case 'WORKING_CHECK_TOPIC_ID':
       return checkTopicId(state, action.payload.topicId)
 
-    case 'WORKING_DONE':
-      return done(state)
-
-    case 'WORKING_LOAD_DONE_TASKS':
-      return loadDoneTasks(state, action.payload.doneTasks)
+    case 'WORKING_CLEAR':
+      return clear(state)
 
     default:
       return state

@@ -1,10 +1,6 @@
-import { ActionType } from '../actions'
 import * as uuidv4 from 'uuid-v4'
-type Topic = {
-  label: string,
-  text: string,
-  uuid: string
-}
+import { ActionType } from '../actions'
+import { Topic } from '../types'
 export type TopicListState = {
   topics: Topic[],
   editing?: Topic
@@ -15,9 +11,8 @@ const initialState: TopicListState = {
 }
 
 const newTopic = (_state: TopicListState): TopicListState => {
-  const topic = {
+  const topic: Topic = {
     label: '',
-    text: '',
     uuid: uuidv4()
   }
   return {
@@ -37,19 +32,14 @@ const editLabel = (_state: TopicListState, label: string): TopicListState => {
   }
 }
 
-const editText = (_state: TopicListState, text: string): TopicListState => {
+const done = (_state: TopicListState): TopicListState => {
   const topic = {
     ..._state.editing,
-    text
+    text: '',
+    createdAt: new Date(),
+    modifiedyAt: new Date()
   }
-  return {
-    ..._state,
-    editing: topic
-  }
-}
-
-const done = (_state: TopicListState): TopicListState => {
-  const topics = [..._state.topics.filter(topic => topic.uuid !== _state.editing.uuid), _state.editing]
+  const topics = [..._state.topics.filter(topic => topic.uuid !== _state.editing.uuid), topic]
   const res = {
     ..._state,
     topics,
@@ -79,6 +69,42 @@ const loadTopics = (_state: TopicListState, topics: any[]): TopicListState => {
   }
 }
 
+const updateLabel = (_state: TopicListState, uuid: string, label: string): TopicListState => {
+  const topics = _state.topics.map(topic => {
+    if (topic.uuid !== uuid) {
+      return topic
+    } else {
+      return {
+        ...topic,
+        label
+      }
+    }
+  })
+
+  return {
+    ..._state,
+    topics
+  }
+}
+
+const updateText = (_state: TopicListState, uuid: string, text: string): TopicListState => {
+  const topics = _state.topics.map(topic => {
+    if (topic.uuid !== uuid) {
+      return topic
+    } else {
+      return {
+        ...topic,
+        text
+      }
+    }
+  })
+
+  return {
+    ..._state,
+    topics
+  }
+}
+
 export default function TopicListReducer(state: TopicListState = initialState, action: ActionType): TopicListState {
   switch (action.type) {
     case 'TOPIC_LIST_NEW_TOPIC':
@@ -86,9 +112,6 @@ export default function TopicListReducer(state: TopicListState = initialState, a
 
     case 'TOPIC_LIST_EDIT_LABEL':
       return editLabel(state, action.payload.label)
-
-    case 'TOPIC_LIST_EDIT_TEXT':
-      return editText(state, action.payload.text)
 
     case 'TOPIC_LIST_DONE':
       return done(state)
@@ -101,6 +124,12 @@ export default function TopicListReducer(state: TopicListState = initialState, a
 
     case 'TOPIC_LIST_LOAD_TOPICS':
       return loadTopics(state, action.payload.topics)
+
+    case 'TOPIC_LIST_UPDATE_LABEL':
+      return updateLabel(state, action.payload.uuid, action.payload.label)
+
+    case 'TOPIC_LIST_UPDATE_TEXT':
+      return updateText(state, action.payload.uuid, action.payload.text)
 
     default:
       return state

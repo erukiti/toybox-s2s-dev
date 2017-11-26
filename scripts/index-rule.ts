@@ -12,8 +12,7 @@ const indexPlugin = (meta, opts) => {
     const upperName = toUpperCamelCase(name)
 
     const actionSource = 
-`import { loadDoneTasks, saveDoneTasks } from '../../handling'
-import { store } from '../'
+`import { store } from '../'
 import { Dispatcher } from '../actions'
 
 

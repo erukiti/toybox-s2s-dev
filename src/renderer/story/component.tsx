@@ -1,24 +1,21 @@
 import * as React from 'react'
-import { WorkingProps } from './index'
-const assert = require('assert')
-const path = require('path')
+import { StoryProps } from './index'
+import { Input, Heading, Checkbox } from 'rebass'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/closebrackets'
 import 'codemirror/addon/edit/continuelist'
-import { Input, Checkbox, Label } from 'rebass'
 
-const bulk = require('bulk-require')
-bulk(path.resolve(path.join(path.dirname(require.resolve('codemirror')), '..')), 'mode/*/*.js')
-
-export default class WorkingComponent extends React.Component<WorkingProps> {
+export default class StoryComponent extends React.Component<StoryProps> {
   render() {
-    if (this.props.topicList.topics.length === 0) {
+    const { uuid } = this.props.story
+    if (!uuid) {
       return <div />
     }
+    const story = this.props.stories.stories.find(story => story.uuid === uuid)
 
     const topicSelect = this.props.topicList.topics.map(topic => {
-      const checked = this.props.working.topicIds.includes(topic.uuid)
+      const checked = story.topicIds.includes(topic.uuid)
       return (
         <span key={topic.uuid}>
           <Checkbox checked={checked} onChange={() => this.props.checkTopicId(topic.uuid)} /> {topic.label}
@@ -26,7 +23,6 @@ export default class WorkingComponent extends React.Component<WorkingProps> {
       )
     })
 
-    const doneDisabled = this.props.topicList.topics.length === 0
     const options = {
       mode: 'gfm',
       theme: 'dracula',
@@ -38,19 +34,18 @@ export default class WorkingComponent extends React.Component<WorkingProps> {
       emoji: true,
       autoFocus: true,
       extraKeys: {
-        'Enter': 'newlineAndIndentContinueMarkdownList'
-      },
+        Enter: 'newlineAndIndentContinueMarkdownList'
+      }
     }
+
     return (
       <div>
-        <Input onChange={ev => this.props.editDesc(ev.target.value)} value={this.props.working.desc} />
+        <div>タスク</div>
+        <Input value={story.desc} onChange={e => this.props.editDesc(e.target.value)} />
         {topicSelect}
-        <button onClick={() => this.props.done()} disabled={doneDisabled}>
-          done
-        </button>
         <CodeMirror
           onBeforeChange={(editor, data, value) => this.props.editMemo(value)}
-          value={this.props.working.memo}
+          value={story.memo}
           options={options}
         />
       </div>

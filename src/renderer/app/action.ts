@@ -1,4 +1,4 @@
-import { loadDoneTasks, saveDoneTasks } from '../../handling'
+import { loadStories, saveStories } from '../../handling'
 import { store } from '../'
 import { Dispatcher } from '../actions'
 

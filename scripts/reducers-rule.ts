@@ -28,11 +28,11 @@ const reducersPlugin = (meta, opts) => {
       actions.push({key, dir, name, args})
     }
 
-    globby.sync(opts.source).map(filepath => {
-      const matched = re.exec(filepath)
+    globby.sync(opts.source).map(filename2 => {
+      const matched = re.exec(filename2)
       names.push(matched[1])
 
-      meta.getNodePath(filepath).get('body').forEach(nodePath => {
+      meta.getNodePath(filename2).get('body').forEach(nodePath => {
         // FIXME move to meta-programming-utils
 
         switch (nodePath.type) {

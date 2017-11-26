@@ -2,26 +2,26 @@
 import { combineReducers } from 'redux'
 
 import appReducer, { AppState } from './app/reducer'
-import doneListReducer, { DoneListState } from './done-list/reducer'
-import taskReferenceReducer, { TaskReferenceState } from './task-reference/reducer'
+import sandboxReducer, { SandboxState } from './sandbox/reducer'
+import storiesReducer, { StoriesState } from './stories/reducer'
+import storyReducer, { StoryState } from './story/reducer'
 import topicListReducer, { TopicListState } from './topic-list/reducer'
 import topicReferenceReducer, { TopicReferenceState } from './topic-reference/reducer'
-import workingReducer, { WorkingState } from './working/reducer'
 
 export interface State {
   app: AppState
-  doneList: DoneListState
-  taskReference: TaskReferenceState
+  sandbox: SandboxState
+  stories: StoriesState
+  story: StoryState
   topicList: TopicListState
   topicReference: TopicReferenceState
-  working: WorkingState
 }
 
 export default combineReducers<State>({
   app: appReducer,
-  doneList: doneListReducer,
-  taskReference: taskReferenceReducer,
+  sandbox: sandboxReducer,
+  stories: storiesReducer,
+  story: storyReducer,
   topicList: topicListReducer,
-  topicReference: topicReferenceReducer,
-  working: workingReducer
+  topicReference: topicReferenceReducer
 })

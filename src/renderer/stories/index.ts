@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import { Dispatch as ReduxDispatch } from 'redux'
 
-import DoneListComponent from './component'
+import StoriesComponent from './component'
 import { State } from '../reducers'
 import { Dispatcher, ActionType } from '../actions'
-import DoneListActionCreator from './action'
+import StoriesActionCreator from './action'
 
 const mapStateToProps = (state: State) => {
     return state
@@ -14,10 +14,10 @@ type DispatchProps = {dispatch: ReduxDispatch<ActionType>}
 
 const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch })
 
-export type DoneListProps = State & DoneListActionCreator
+export type StoriesProps = State & StoriesActionCreator
 
 const dispatcher = new Dispatcher()
-const actions = new DoneListActionCreator(dispatcher)
+const actions = new StoriesActionCreator(dispatcher)
 
 let isFirst = true
 
@@ -42,4 +42,4 @@ const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) =>
   return props
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(DoneListComponent)
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(StoriesComponent)

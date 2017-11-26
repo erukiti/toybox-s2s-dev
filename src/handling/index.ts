@@ -21,15 +21,15 @@ export const loadTopics = (basedir: string) => {
   }
 }
 
-export const saveDoneTasks = (basedir: string, tasks: any[]) => {
+export const saveStories = (basedir: string, stories: any[]) => {
   mkdirp.sync(basedir)
-  const filepath = path.join(basedir, 'tasks.json')
-  fs.writeFileSync(filepath, JSON.stringify(tasks))
+  const filepath = path.join(basedir, 'stories.json')
+  fs.writeFileSync(filepath, JSON.stringify(stories))
 }
 
-export const loadDoneTasks = (basedir: string) => {
+export const loadStories = (basedir: string) => {
   mkdirp.sync(basedir)
-  const filepath = path.join(basedir, 'tasks.json')
+  const filepath = path.join(basedir, 'stories.json')
   try {
     return JSON.parse(fs.readFileSync(filepath).toString('utf-8'))
   } catch (e) {

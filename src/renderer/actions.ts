@@ -3,13 +3,14 @@ import { Dispatch as ReduxDispatch } from 'redux'
 
 export type ActionType =
 { type: 'APP_CHANGE_MODE', payload: {mode: string}, } |
-{ type: 'DONE_LIST_ADD', payload: {desc: string, memo: string, topicIds: string[]}, } |
-{ type: 'DONE_LIST_LOAD', payload: {tasks: any[]}, } |
-{ type: 'DONE_LIST_UPDATE_DESC', payload: {uuid: string, desc: string}, } |
-{ type: 'DONE_LIST_UPDATE_MEMO', payload: {uuid: string, memo: string}, } |
-{ type: 'TASK_REFERENCE_START', payload: {uuid: string, desc: string, memo: string, topicIds: string[]}, } |
-{ type: 'TASK_REFERENCE_EDIT_DESC', payload: {desc: string}, } |
-{ type: 'TASK_REFERENCE_EDIT_MEMO', payload: {memo: string}, } |
+{ type: 'SANDBOX_EDIT_CODE', payload: {code: string}, } |
+{ type: 'SANDBOX_RUN', payload: {count: number, result: string, date: number}, } |
+{ type: 'STORIES_ADD', payload: {}, } |
+{ type: 'STORIES_LOAD', payload: {stories: any[]}, } |
+{ type: 'STORIES_UPDATE_DESC', payload: {uuid: string, desc: string}, } |
+{ type: 'STORIES_UPDATE_MEMO', payload: {uuid: string, memo: string}, } |
+{ type: 'STORIES_CHANGE_TOPIC_ID', payload: {uuid: string, topicId: string}, } |
+{ type: 'STORY_START', payload: {uuid: string}, } |
 { type: 'TOPIC_LIST_NEW_TOPIC', payload: {}, } |
 { type: 'TOPIC_LIST_EDIT_LABEL', payload: {label: string}, } |
 { type: 'TOPIC_LIST_DONE', payload: {}, } |
@@ -20,11 +21,7 @@ export type ActionType =
 { type: 'TOPIC_LIST_UPDATE_TEXT', payload: {uuid: string, text: string}, } |
 { type: 'TOPIC_REFERENCE_START', payload: {uuid: string, label: string, text: string}, } |
 { type: 'TOPIC_REFERENCE_EDIT_LABEL', payload: {label: string}, } |
-{ type: 'TOPIC_REFERENCE_EDIT_TEXT', payload: {text: string}, } |
-{ type: 'WORKING_EDIT_DESC', payload: {desc: string}, } |
-{ type: 'WORKING_EDIT_MEMO', payload: {memo: string}, } |
-{ type: 'WORKING_CHECK_TOPIC_ID', payload: {topicId: string}, } |
-{ type: 'WORKING_CLEAR', payload: {}, }
+{ type: 'TOPIC_REFERENCE_EDIT_TEXT', payload: {text: string}, }
 
 export class Dispatcher {
   private _dispatch: ReduxDispatch<ActionType>
@@ -32,16 +29,19 @@ export class Dispatcher {
   app: {
     changeMode: (mode: string) => void
   }
-  doneList: {
-    add: (desc: string, memo: string, topicIds: string[]) => void,
-    load: (tasks: any[]) => void,
-    updateDesc: (uuid: string, desc: string) => void,
-    updateMemo: (uuid: string, memo: string) => void
+  sandbox: {
+    editCode: (code: string) => void,
+    run: (count: number, result: string, date: number) => void
   }
-  taskReference: {
-    start: (uuid: string, desc: string, memo: string, topicIds: string[]) => void,
-    editDesc: (desc: string) => void,
-    editMemo: (memo: string) => void
+  stories: {
+    add: () => void,
+    load: (stories: any[]) => void,
+    updateDesc: (uuid: string, desc: string) => void,
+    updateMemo: (uuid: string, memo: string) => void,
+    changeTopicId: (uuid: string, topicId: string) => void
+  }
+  story: {
+    start: (uuid: string) => void
   }
   topicList: {
     newTopic: () => void,
@@ -58,27 +58,24 @@ export class Dispatcher {
     editLabel: (label: string) => void,
     editText: (text: string) => void
   }
-  working: {
-    editDesc: (desc: string) => void,
-    editMemo: (memo: string) => void,
-    checkTopicId: (topicId: string) => void,
-    clear: () => void
-  }
 
   constructor() {
     this.app = {
       changeMode: (mode: string) => this._dispatch({type: 'APP_CHANGE_MODE', payload: {mode}})
     },
-    this.doneList = {
-      add: (desc: string, memo: string, topicIds: string[]) => this._dispatch({type: 'DONE_LIST_ADD', payload: {desc, memo, topicIds}}),
-      load: (tasks: any[]) => this._dispatch({type: 'DONE_LIST_LOAD', payload: {tasks}}),
-      updateDesc: (uuid: string, desc: string) => this._dispatch({type: 'DONE_LIST_UPDATE_DESC', payload: {uuid, desc}}),
-      updateMemo: (uuid: string, memo: string) => this._dispatch({type: 'DONE_LIST_UPDATE_MEMO', payload: {uuid, memo}})
+    this.sandbox = {
+      editCode: (code: string) => this._dispatch({type: 'SANDBOX_EDIT_CODE', payload: {code}}),
+      run: (count: number, result: string, date: number) => this._dispatch({type: 'SANDBOX_RUN', payload: {count, result, date}})
     },
-    this.taskReference = {
-      start: (uuid: string, desc: string, memo: string, topicIds: string[]) => this._dispatch({type: 'TASK_REFERENCE_START', payload: {uuid, desc, memo, topicIds}}),
-      editDesc: (desc: string) => this._dispatch({type: 'TASK_REFERENCE_EDIT_DESC', payload: {desc}}),
-      editMemo: (memo: string) => this._dispatch({type: 'TASK_REFERENCE_EDIT_MEMO', payload: {memo}})
+    this.stories = {
+      add: () => this._dispatch({type: 'STORIES_ADD', payload: {}}),
+      load: (stories: any[]) => this._dispatch({type: 'STORIES_LOAD', payload: {stories}}),
+      updateDesc: (uuid: string, desc: string) => this._dispatch({type: 'STORIES_UPDATE_DESC', payload: {uuid, desc}}),
+      updateMemo: (uuid: string, memo: string) => this._dispatch({type: 'STORIES_UPDATE_MEMO', payload: {uuid, memo}}),
+      changeTopicId: (uuid: string, topicId: string) => this._dispatch({type: 'STORIES_CHANGE_TOPIC_ID', payload: {uuid, topicId}})
+    },
+    this.story = {
+      start: (uuid: string) => this._dispatch({type: 'STORY_START', payload: {uuid}})
     },
     this.topicList = {
       newTopic: () => this._dispatch({type: 'TOPIC_LIST_NEW_TOPIC', payload: {}}),
@@ -94,12 +91,6 @@ export class Dispatcher {
       start: (uuid: string, label: string, text: string) => this._dispatch({type: 'TOPIC_REFERENCE_START', payload: {uuid, label, text}}),
       editLabel: (label: string) => this._dispatch({type: 'TOPIC_REFERENCE_EDIT_LABEL', payload: {label}}),
       editText: (text: string) => this._dispatch({type: 'TOPIC_REFERENCE_EDIT_TEXT', payload: {text}})
-    },
-    this.working = {
-      editDesc: (desc: string) => this._dispatch({type: 'WORKING_EDIT_DESC', payload: {desc}}),
-      editMemo: (memo: string) => this._dispatch({type: 'WORKING_EDIT_MEMO', payload: {memo}}),
-      checkTopicId: (topicId: string) => this._dispatch({type: 'WORKING_CHECK_TOPIC_ID', payload: {topicId}}),
-      clear: () => this._dispatch({type: 'WORKING_CLEAR', payload: {}})
     }
   }
 

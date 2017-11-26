@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import { Dispatch as ReduxDispatch } from 'redux'
 
-import TaskReferenceComponent from './component'
+import SandboxComponent from './component'
 import { State } from '../reducers'
 import { Dispatcher, ActionType } from '../actions'
-import TaskReferenceActionCreator from './action'
+import SandboxActionCreator from './action'
 
 const mapStateToProps = (state: State) => {
     return state
@@ -14,10 +14,10 @@ type DispatchProps = {dispatch: ReduxDispatch<ActionType>}
 
 const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch })
 
-export type TaskReferenceProps = State & TaskReferenceActionCreator
+export type SandboxProps = State & SandboxActionCreator
 
 const dispatcher = new Dispatcher()
-const actions = new TaskReferenceActionCreator(dispatcher)
+const actions = new SandboxActionCreator(dispatcher)
 
 let isFirst = true
 
@@ -42,4 +42,4 @@ const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) =>
   return props
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(TaskReferenceComponent)
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(SandboxComponent)

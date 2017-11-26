@@ -1,7 +1,11 @@
-export type Task = {
+export type Story = {
   desc: string,
   memo: string,
   uuid: string,
+  urls: string[],
+  directory: string,
+  apps: string[],
+  tabs: string[],
   topicIds: string[],
   createAt?: Date,
   modifiedAt?: Date,
@@ -15,4 +19,4 @@ export type Topic = {
   modifiedyAt?: Date,
 }
 
-export type AppMode = 'topic' | 'task' | null
+export type AppMode = 'topic' | 'story' | 'sandbox' | null

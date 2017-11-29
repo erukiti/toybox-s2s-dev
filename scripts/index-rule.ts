@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { toUpperCamelCase, createFileSync } from './utils'
+import { createFileSync, toUpperCamelCase } from './utils'
 
 const indexPlugin = (meta, opts) => {
   const func = (source, fileName, inputType, outputType) => {
@@ -11,8 +11,7 @@ const indexPlugin = (meta, opts) => {
     const name = arr[arr.length - 1]
     const upperName = toUpperCamelCase(name)
 
-    const actionSource = 
-`import { store } from '../'
+    const actionSource = `import { store } from '../'
 import { Dispatcher } from '../actions'
 
 
@@ -31,8 +30,7 @@ export default class ${upperName}ActionCreator {
 }
 `
 
-    const reducerSource =
-`import { ActionType } from '../actions'
+    const reducerSource = `import { ActionType } from '../actions'
 
 export type ${upperName}State = {
 
@@ -42,15 +40,16 @@ const initialState: ${upperName}State = {
 
 }
 
-export default function ${upperName}Reducer(state: ${upperName}State = initialState, action: ActionType): ${upperName}State {
+export default function ${upperName}Reducer(state: ${upperName}State = initialState, action: ActionType): ${
+      upperName
+    }State {
   switch (action.type) {
     default: return state
   }
 }
 `
 
-    const componentSource =
-`import * as React from 'react'
+    const componentSource = `import * as React from 'react'
 import {${upperName}Props} from './index'
 
 export default class ${upperName}Component extends React.Component<${upperName}Props> {
@@ -61,8 +60,7 @@ export default class ${upperName}Component extends React.Component<${upperName}P
 }
 `
 
-    const indexSource =
-`import { connect } from 'react-redux'
+    const indexSource = `import { connect } from 'react-redux'
 import { Dispatch as ReduxDispatch } from 'redux'
 
 import ${upperName}Component from './component'
@@ -116,10 +114,10 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(${upperN
   }
 
   return {
-    name: 'index',
     func,
     inputTypes: ['.ts'],
-    outputTypes: ['.ts'],
+    name: 'index',
+    outputTypes: ['.ts']
   }
 }
 

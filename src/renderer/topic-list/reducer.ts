@@ -1,13 +1,13 @@
 import * as uuidv4 from 'uuid-v4'
 import { ActionType } from '../actions'
 import { Topic } from '../types'
-export type TopicListState = {
-  topics: Topic[],
+export interface TopicListState {
+  topics: Topic[]
   editing?: Topic
 }
 const initialState: TopicListState = {
-  topics: [],
-  editing: null
+  editing: null,
+  topics: []
 }
 
 const newTopic = (_state: TopicListState): TopicListState => {
@@ -35,15 +35,16 @@ const editLabel = (_state: TopicListState, label: string): TopicListState => {
 const done = (_state: TopicListState): TopicListState => {
   const topic = {
     ..._state.editing,
-    text: '',
     createdAt: new Date(),
-    modifiedyAt: new Date()
+    modifiedyAt: new Date(),
+    text: ''
   }
-  const topics = [..._state.topics.filter(topic => topic.uuid !== _state.editing.uuid), topic]
+
+  const topics = [..._state.topics.filter(topic2 => topic2.uuid !== _state.editing.uuid), topic]
   const res = {
     ..._state,
-    topics,
-    editing: null
+    editing: null,
+    topics
   }
   return res
 }

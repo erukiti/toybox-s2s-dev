@@ -1,12 +1,12 @@
 import { ActionType } from '../actions'
-export type History = {
-  count: number,
-  code: string,
-  result: string,
+export interface History {
+  count: number
+  code: string
+  result: string
   date: number
 }
-export type SandboxState = {
-  code: string,
+export interface SandboxState {
+  code: string
   histories: History[]
 }
 const initialState: SandboxState = {

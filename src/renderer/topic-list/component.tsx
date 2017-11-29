@@ -2,17 +2,13 @@ import * as React from 'react'
 import { TopicListProps } from './index'
 
 export default class TopicListComponent extends React.Component<TopicListProps> {
-  render() {
+  public render() {
     const topics = this.props.topicList.topics.map(topic => {
       return (
         <div key={topic.uuid}>
           <span>{topic.label}</span>
-          <button onClick={() => this.props.remove(topic.uuid)}>
-            remove
-          </button>
-          <button onClick={() => this.props.startRef(topic.uuid)}>
-            ref
-          </button>
+          <button onClick={() => this.props.remove(topic.uuid)}>remove</button>
+          <button onClick={() => this.props.startRef(topic.uuid)}>ref</button>
         </div>
       )
     })

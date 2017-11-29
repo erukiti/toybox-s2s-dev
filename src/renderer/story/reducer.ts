@@ -1,6 +1,6 @@
 import { ActionType } from '../actions'
 import { Story } from '../types'
-export type StoryState = {
+export interface StoryState {
   uuid: string
 }
 const initialState: StoryState = {

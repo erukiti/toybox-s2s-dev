@@ -1,18 +1,18 @@
-import * as React from 'react'
-import { StoryProps } from './index'
-import { Input, Heading, Checkbox } from 'rebass'
-import { Controlled as CodeMirror } from 'react-codemirror2'
-import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/closebrackets'
 import 'codemirror/addon/edit/continuelist'
+import 'codemirror/addon/edit/matchbrackets'
+import * as React from 'react'
+import { Controlled as CodeMirror } from 'react-codemirror2'
+import { Checkbox, Heading, Input } from 'rebass'
+import { StoryProps } from './index'
 
 export default class StoryComponent extends React.Component<StoryProps> {
-  render() {
+  public render() {
     const { uuid } = this.props.story
     if (!uuid) {
       return <div />
     }
-    const story = this.props.stories.stories.find(story => story.uuid === uuid)
+    const story = this.props.stories.stories.find(story2 => story2.uuid === uuid)
 
     const topicSelect = this.props.topicList.topics.map(topic => {
       const checked = story.topicIds.includes(topic.uuid)
@@ -24,18 +24,18 @@ export default class StoryComponent extends React.Component<StoryProps> {
     })
 
     const options = {
-      mode: 'gfm',
-      theme: 'dracula',
-      lineNumbers: true,
-      matchBrackets: true,
       autoCloseBrackets: true,
-      matchTags: true,
       autoCloseTags: true,
-      emoji: true,
       autoFocus: true,
+      emoji: true,
       extraKeys: {
         Enter: 'newlineAndIndentContinueMarkdownList'
-      }
+      },
+      lineNumbers: true,
+      matchBrackets: true,
+      matchTags: true,
+      mode: 'gfm',
+      theme: 'dracula'
     }
 
     return (

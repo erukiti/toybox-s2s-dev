@@ -1,18 +1,13 @@
-import { loadStories, saveStories } from '../../handling'
 import { store } from '../'
+import { loadStories, saveStories } from '../../handling'
 import { Dispatcher } from '../actions'
 
-
 export default class AppActionCreator {
-  _dispatch: Dispatcher
+  public _dispatch: Dispatcher
 
   constructor(dispatcher: Dispatcher) {
     this._dispatch = dispatcher
   }
 
-  _first() {
-
-  }
-
-
+  public _first() {}
 }

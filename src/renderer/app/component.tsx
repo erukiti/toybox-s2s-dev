@@ -1,23 +1,22 @@
 import * as React from 'react'
-import { AppProps } from './index'
-import TopicList from '../topic-list'
-import Stories from '../stories'
-import TopicReference from '../topic-reference'
-import Story from '../story'
 import Sandbox from '../sandbox'
+import Stories from '../stories'
+import Story from '../story'
+import TopicList from '../topic-list'
+import TopicReference from '../topic-reference'
+import { AppProps } from './index'
 
-import { Provider, Flex, Box } from 'rebass'
-
+import { Box, Flex, Provider } from 'rebass'
 
 export default class AppComponent extends React.Component<AppProps> {
-  render() {
+  public render() {
     const theme = {
       font: '"Noto Sans Japanese"',
       monospace: 'Ricrty Dimished Discord, Ricty Dimished, "MyricaM M"',
       fontSizes: [10, 16, 24, 36, 48, 72]
     }
 
-    let pane1 = <div />
+    const pane1 = <div />
 
     let pane2 = <div />
     switch (this.props.app.mode) {

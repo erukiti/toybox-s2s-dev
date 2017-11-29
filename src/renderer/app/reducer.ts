@@ -1,6 +1,6 @@
 import { ActionType } from '../actions'
 import { AppMode } from '../types'
-export type AppState = {
+export interface AppState {
   mode: string
 }
 const initialState: AppState = {

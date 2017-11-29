@@ -1,35 +1,37 @@
-import * as React from 'react'
-import {TopicReferenceProps} from './index'
-import { Input, Heading } from 'rebass'
-import { Controlled as CodeMirror } from 'react-codemirror2'
-import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/closebrackets'
 import 'codemirror/addon/edit/continuelist'
+import 'codemirror/addon/edit/matchbrackets'
+import * as React from 'react'
+import { Controlled as CodeMirror } from 'react-codemirror2'
+import { Heading, Input } from 'rebass'
+import { TopicReferenceProps } from './index'
 
 export default class TopicReferenceComponent extends React.Component<TopicReferenceProps> {
-  render() {
+  public render() {
     const options = {
-      mode: 'gfm',
-      theme: 'dracula',
+      autoCloseBrackets: true,
+      autoCloseTags: true,
+      autoFocus: true,
+      emoji: true,
+      extraKeys: {
+        Enter: 'newlineAndIndentContinueMarkdownList'
+      },
       lineNumbers: true,
       matchBrackets: true,
-      autoCloseBrackets: true,
       matchTags: true,
-      autoCloseTags: true,
-      emoji: true,
-      autoFocus: true,
-      extraKeys: {
-        'Enter': 'newlineAndIndentContinueMarkdownList'
-      },
+      mode: 'gfm',
+      theme: 'dracula'
     }
-    return <div>
-      <Heading>トピック</Heading>
-      <Input value={this.props.topicReference.label} onChange={e => this.props.editLabel(e.target.value)} />
-      <CodeMirror
-        onBeforeChange={(editor, data, value) => this.props.editText(value)}
-        value={this.props.topicReference.text}
-        options={options}
-      />
-    </div>
+    return (
+      <div>
+        <Heading>トピック</Heading>
+        <Input value={this.props.topicReference.label} onChange={e => this.props.editLabel(e.target.value)} />
+        <CodeMirror
+          onBeforeChange={(editor, data, value) => this.props.editText(value)}
+          value={this.props.topicReference.text}
+          options={options}
+        />
+      </div>
+    )
   }
 }

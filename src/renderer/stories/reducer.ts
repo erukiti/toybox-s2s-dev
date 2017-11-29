@@ -3,7 +3,7 @@ import { Story } from '../types'
 
 const uuidv4 = require('uuid-v4')
 
-export type StoriesState = {
+export interface StoriesState {
   stories: Story[]
 }
 const initialState: StoriesState = {
@@ -12,16 +12,16 @@ const initialState: StoriesState = {
 
 const add = (_state: StoriesState): StoriesState => {
   const story: Story = {
+    apps: [],
     desc: '',
+    directory: '',
     memo: '',
+    createAt: new Date(),
+    modifiedAt: new Date(),
+    tabs: [],
     topicIds: [],
     urls: [],
-    directory: '',
-    apps: [],
-    tabs: [],
-    uuid: uuidv4(),
-    createAt: new Date(),
-    modifiedAt: new Date()
+    uuid: uuidv4()
   }
   const stories: Story[] = [..._state.stories, story]
   return {
@@ -74,8 +74,6 @@ const updateMemo = (_state: StoriesState, uuid: string, memo: string): StoriesSt
 }
 
 const changeTopicId = (_state: StoriesState, uuid: string, topicId: string): StoriesState => {
-  let topicIds
-
   const stories = _state.stories.map(story => {
     if (story.uuid !== uuid) {
       return story

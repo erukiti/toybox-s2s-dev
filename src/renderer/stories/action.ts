@@ -1,31 +1,30 @@
 const assert = require('assert')
 
-import { loadStories, saveStories } from '../../handling'
 import { store } from '../'
+import { loadStories, saveStories } from '../../handling'
 import { Dispatcher } from '../actions'
 
-
 export default class StoriesActionCreator {
-  _dispatch: Dispatcher
+  public _dispatch: Dispatcher
 
   constructor(dispatcher: Dispatcher) {
     this._dispatch = dispatcher
   }
 
-  _first() {
+  public _first() {
     const state = store.getState()
     this._dispatch.stories.load(loadStories('_'))
   }
 
-  add() {
+  public add() {
     this._dispatch.stories.add()
     const { stories } = store.getState().stories
     const { uuid } = stories[stories.length - 1]
     this.refStory(uuid)
   }
 
-  refStory(uuid: string) {
-    const story = store.getState().stories.stories.find(story => story.uuid === uuid)
+  public refStory(uuid: string) {
+    const story = store.getState().stories.stories.find(story2 => story2.uuid === uuid)
     assert(story)
     this._dispatch.story.start(story.uuid)
     this._dispatch.app.changeMode('story')

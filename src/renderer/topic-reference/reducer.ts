@@ -1,21 +1,21 @@
 import { ActionType } from '../actions'
 import { Topic } from '../types'
-export type TopicReferenceState = {
-  uuid: string,
-  label: string,
+export interface TopicReferenceState {
+  uuid: string
+  label: string
   text: string
 }
 const initialState: TopicReferenceState = {
-  uuid: '',
   label: '',
-  text: ''
+  text: '',
+  uuid: ''
 }
 
 const start = (_state: TopicReferenceState, uuid: string, label: string, text: string): TopicReferenceState => {
   return {
-    uuid,
     label,
-    text
+    text,
+    uuid
   }
 }
 

@@ -1,34 +1,31 @@
 import { store } from '../'
-import { Dispatcher } from '../actions'
 import { Sandbox } from '../../sandbox'
+import { Dispatcher } from '../actions'
 
 export default class SandboxActionCreator {
-  _dispatch: Dispatcher
-  sandbox: Sandbox
+  public _dispatch: Dispatcher
+  public sandbox: Sandbox
 
   constructor(dispatcher: Dispatcher) {
     this._dispatch = dispatcher
   }
 
-  _first() {
+  public _first() {
     this.sandbox = new Sandbox()
-    
   }
 
-  start() {
-  }
+  public start() {}
 
-  end() {
+  public end() {
     this.sandbox = null
   }
 
-  editCode(code: string) {
+  public editCode(code: string) {
     this._dispatch.sandbox.editCode(code)
   }
 
-  run() {
-    const {count, result} = this.sandbox.run(store.getState().sandbox.code)
+  public run() {
+    const { count, result } = this.sandbox.run(store.getState().sandbox.code)
     this._dispatch.sandbox.run(count, result, Date.now())
   }
-
 }

@@ -3,7 +3,7 @@
         "target": "es2017",
         "module": "commonjs",
         "outDir": "dist/",
-        "allowJs": false,
+        "allowJs": true,
         "sourceMap": true,
         "jsx": "react"
     },

@@ -3,8 +3,14 @@ const path = require('path')
 const fs = require('fs')
 
 export class Sandbox {
-  count = 1
-  sandbox = {
+  public count = 1
+  public sandbox = {
+    Buffer,
+    Number,
+    String,
+    console,
+    itreed: this,
+    process,
     require(name) {
       const full = path.resolve(path.join('node_modules', name))
       if (fs.existsSync(full)) {
@@ -19,24 +25,18 @@ export class Sandbox {
 
       return require(name)
     },
-    itreed: this,
-    setTimeout,
     setInterval,
-    process,
-    Buffer,
-    String,
-    Number,
-    console
+    setTimeout
   }
 
   constructor() {
     vm.createContext(this.sandbox)
   }
 
-  run(code) {
+  public run(code) {
     return {
-      result: `${vm.runInContext(code, this.sandbox)}`,
-      count: this.count++
+      count: this.count++,
+      result: `${vm.runInContext(code, this.sandbox)}`
     }
   }
 }

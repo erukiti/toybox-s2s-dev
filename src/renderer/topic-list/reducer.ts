@@ -2,8 +2,8 @@ import * as uuidv4 from 'uuid-v4'
 import { ActionType } from '../actions'
 import { Topic } from '../types'
 export interface TopicListState {
-  topics: Topic[]
-  editing?: Topic
+  topics: Topic[];
+  editing?: Topic;
 }
 const initialState: TopicListState = {
   editing: null,
@@ -39,7 +39,6 @@ const done = (_state: TopicListState): TopicListState => {
     modifiedyAt: new Date(),
     text: ''
   }
-
   const topics = [..._state.topics.filter(topic2 => topic2.uuid !== _state.editing.uuid), topic]
   const res = {
     ..._state,

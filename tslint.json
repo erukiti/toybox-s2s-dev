@@ -10,16 +10,28 @@
       "no-implicit-dependencies": false,
       "variable-name": false,
       "no-submodule-imports": false,
+      "no-duplicate-imports": false,
       "no-empty": false,
       "prefer-conditional-expression": false,
+      "no-invalid-template-strings": false,
+      "no-conditional-assignment": false,
       "object-literal-sort-keys": false
     },
     "jsRules": {
-      "trailing-comma": false,
+      "prettier": true,
+      "no-var-requires": false,
       "no-console": false,
+      "member-ordering": false,
+      "interface-name": false,
+      "trailing-comma": false,
+      "no-implicit-dependencies": false,
       "variable-name": false,
+      "no-submodule-imports": false,
+      "no-duplicate-imports": false,
+      "no-empty": false,
       "prefer-conditional-expression": false,
-      "object-literal-sort-keys": false,
-      "no-empty": false
+      "no-invalid-template-strings": false,
+      "no-conditional-assignment": false,
+      "object-literal-sort-keys": false
     }
   }

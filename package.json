@@ -38,7 +38,7 @@
   "dependencies": {
     "bulk-require": "^1.0.1",
     "codemirror": "^5.32.0",
-    "meta-programming-utils": "file:../../_repositories/meta-programming-utils",
+    "meta-programming-utils": "^0.1.0",
     "mkdirp": "^0.5.1",
     "react": "^16.1.1",
     "react-codemirror2": "^3.0.7",

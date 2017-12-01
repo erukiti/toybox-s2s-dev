@@ -1,9 +1,9 @@
 import { ActionType } from '../actions'
 import { Topic } from '../types'
 export interface TopicReferenceState {
-  uuid: string
-  label: string
-  text: string
+  uuid: string;
+  label: string;
+  text: string;
 }
 const initialState: TopicReferenceState = {
   label: '',

@@ -1,7 +1,7 @@
 import { ActionType } from '../actions'
 import { Story } from '../types'
 export interface StoryState {
-  uuid: string
+  uuid: string;
 }
 const initialState: StoryState = {
   uuid: ''

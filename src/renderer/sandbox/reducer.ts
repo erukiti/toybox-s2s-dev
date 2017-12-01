@@ -1,13 +1,13 @@
 import { ActionType } from '../actions'
 export interface History {
-  count: number
-  code: string
-  result: string
-  date: number
+  count: number;
+  code: string;
+  result: string;
+  date: number;
 }
 export interface SandboxState {
-  code: string
-  histories: History[]
+  code: string;
+  histories: History[];
 }
 const initialState: SandboxState = {
   code: '',

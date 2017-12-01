@@ -1,7 +1,7 @@
 import { ActionType } from '../actions'
 import { AppMode } from '../types'
 export interface AppState {
-  mode: string
+  mode: string;
 }
 const initialState: AppState = {
   mode: null

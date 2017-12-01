@@ -1,10 +1,7 @@
-import 'codemirror/addon/edit/closebrackets'
-import 'codemirror/addon/edit/continuelist'
-import 'codemirror/addon/edit/matchbrackets'
 import * as React from 'react'
-import { Controlled as CodeMirror } from 'react-codemirror2'
-import { Checkbox, Heading, Input } from 'rebass'
+import { Box, Checkbox, Flex, Heading, Input } from 'rebass'
 import { StoryProps } from './index'
+const ReactQuill = require('react-quill')
 
 export default class StoryComponent extends React.Component<StoryProps> {
   public render() {
@@ -22,33 +19,20 @@ export default class StoryComponent extends React.Component<StoryProps> {
         </span>
       )
     })
-
-    const options = {
-      autoCloseBrackets: true,
-      autoCloseTags: true,
-      autoFocus: true,
-      emoji: true,
-      extraKeys: {
-        Enter: 'newlineAndIndentContinueMarkdownList'
-      },
-      lineNumbers: true,
-      matchBrackets: true,
-      matchTags: true,
-      mode: 'gfm',
-      theme: 'dracula'
+    const style = {
+      height: '100%'
     }
-
     return (
-      <div>
-        <div>タスク</div>
-        <Input value={story.desc} onChange={e => this.props.editDesc(e.target.value)} />
-        {topicSelect}
-        <CodeMirror
-          onBeforeChange={(editor, data, value) => this.props.editMemo(value)}
-          value={story.memo}
-          options={options}
-        />
-      </div>
+      <Flex direction="column" style={style}>
+        <Box>
+          <div>タスク</div>
+          <Input value={story.desc} onChange={e => this.props.editDesc(e.target.value)} />
+          {topicSelect}
+        </Box>
+        <Box flex="1">
+          <ReactQuill onChange={value => this.props.editMemo(value)} value={story.memo} theme="snow" />
+        </Box>
+      </Flex>
     )
   }
 }

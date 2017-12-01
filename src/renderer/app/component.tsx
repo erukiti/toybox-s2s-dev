@@ -33,15 +33,16 @@ export default class AppComponent extends React.Component<AppProps> {
         break
       }
     }
+
+    const style = { height: '100vh' }
     return (
       <Provider theme={theme}>
         <Flex>
-          <Box w={0.7} mx={2}>
+          <Box w={0.7} mx={2} style={style}>
             {pane2}
           </Box>
-          <Box w={0.3} mx={2}>
+          <Box w={0.3} mx={2} style={style}>
             <TopicList />
-            <hr />
             <Stories />
           </Box>
         </Flex>

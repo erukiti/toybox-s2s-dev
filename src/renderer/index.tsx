@@ -8,9 +8,11 @@ import reducers from './reducers'
 
 export const store = createStore(reducers)
 
+const style = { height: '100%' }
+
 render(
   <Provider store={store}>
-    <App />
+    <App style={style} />
   </Provider>,
   document.getElementById('root')
 )

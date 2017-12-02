@@ -1,7 +1,15 @@
+import * as brace from 'brace'
+import * as fs from 'fs'
+import * as path from 'path'
 import * as React from 'react'
+import Editor from 'react-ace'
 import { Box, Checkbox, Flex, Heading, Input } from 'rebass'
+
+import { getAcePluginNames, requireAllAcePlugins } from '../../utils'
+
+requireAllAcePlugins()
+
 import { StoryProps } from './index'
-const ReactQuill = require('react-quill')
 
 export default class StoryComponent extends React.Component<StoryProps> {
   public render() {
@@ -30,7 +38,16 @@ export default class StoryComponent extends React.Component<StoryProps> {
           {topicSelect}
         </Box>
         <Box flex="1">
-          <ReactQuill onChange={value => this.props.editMemo(value)} value={story.memo} theme="snow" />
+          <Editor
+            mode="markdown"
+            theme="textmate"
+            width="100%"
+            height="100%"
+            onChange={value => this.props.editMemo(value)}
+            value={story.memo}
+            focus={true}
+            wrapEnabled={true}
+          />
         </Box>
       </Flex>
     )

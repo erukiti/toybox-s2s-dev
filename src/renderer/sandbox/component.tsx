@@ -1,5 +1,7 @@
 import * as React from 'react'
+import Editor from 'react-ace'
 import { Button, Textarea } from 'rebass'
+
 import { SandboxProps } from './index'
 
 export default class SandboxComponent extends React.Component<SandboxProps> {
@@ -20,7 +22,7 @@ export default class SandboxComponent extends React.Component<SandboxProps> {
       <div>
         <div>JavaScript Sandbox</div>
         {histories}
-        <Textarea value={this.props.sandbox.code} onChange={e => this.props.editCode(e.target.value)} />
+        <Editor value={this.props.sandbox.code} onChange={value => this.props.editCode(value)} />
         <Button onClick={() => this.props.run()} children="RUN" />
       </div>
     )

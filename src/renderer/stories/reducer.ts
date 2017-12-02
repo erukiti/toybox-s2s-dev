@@ -4,7 +4,7 @@ import { Story } from '../types'
 const uuidv4 = require('uuid-v4')
 
 export interface StoriesState {
-  stories: Story[];
+  stories: Story[]
 }
 const initialState: StoriesState = {
   stories: []

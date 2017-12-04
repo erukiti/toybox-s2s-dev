@@ -13,29 +13,7 @@ class TopicListComponent extends React.Component<Props> {
       )
     })
 
-    let topicEditor = <div />
-    if (this.props.topicList.editing) {
-      topicEditor = (
-        <div>
-          <input
-            type="text"
-            onChange={ev => this.props.act.topicList.editLabel(ev.target.value)}
-            value={this.props.topicList.editing.label}
-          />
-          <button onClick={() => this.props.act.topicList.done()}>Submit</button>
-          <button onClick={() => this.props.act.topicList.cancel()}>cancel</button>
-        </div>
-      )
-    }
-
-    return (
-      <div>
-        {topics}
-        <hr />
-        <button onClick={() => this.props.act.topicList.newTopic()}>new</button>
-        {topicEditor}
-      </div>
-    )
+    return <div>{topics}</div>
   }
 }
 

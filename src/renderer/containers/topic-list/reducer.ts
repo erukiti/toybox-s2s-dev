@@ -1,60 +1,38 @@
 import * as uuidv4 from 'uuid-v4'
 import { Topic } from '../../../types'
+import { changeProperty } from '../../utils'
 import { ActionType } from '../actions'
 export interface TopicListState {
   topics: Topic[]
-  editing?: Topic
 }
 const initialState: TopicListState = {
-  editing: null,
   topics: []
 }
 
-const newTopic = (_state: TopicListState): TopicListState => {
+const editLabel = (_state: TopicListState, uuid: string, label: string): TopicListState => {
+  return {
+    topics: changeProperty(_state.topics, uuid, 'label', label)
+  }
+}
+
+const editText = (_state: TopicListState, uuid: string, text: string): TopicListState => {
+  return {
+    topics: changeProperty(_state.topics, uuid, 'text', text)
+  }
+}
+
+const add = (_state: TopicListState, label: string, text: string): TopicListState => {
   const topic: Topic = {
-    label: '',
-    rev: '',
+    label,
+    text,
     uuid: uuidv4(),
-    createdAt: null,
-    updatedAt: null
-  }
-  return {
-    ..._state,
-    editing: topic
-  }
-}
-
-const editLabel = (_state: TopicListState, label: string): TopicListState => {
-  const topic = {
-    ..._state.editing,
-    label
-  }
-  return {
-    ..._state,
-    editing: topic
-  }
-}
-
-const done = (_state: TopicListState): TopicListState => {
-  const topic = {
-    ..._state.editing,
-    text: ''
-  }
-  const topics = [..._state.topics.filter(topic2 => topic2.uuid !== _state.editing.uuid), topic]
-  const res = {
-    ..._state,
-    editing: null,
-    topics,
     createdAt: Date.now(),
-    updatedAt: Date.now()
+    updatedAt: Date.now(),
+    rev: ''
   }
-  return res
-}
-
-const cancel = (_state: TopicListState): TopicListState => {
   return {
     ..._state,
-    editing: null
+    topics: [..._state.topics, topic]
   }
 }
 
@@ -72,67 +50,22 @@ const loadTopics = (_state: TopicListState, topics: any[]): TopicListState => {
   }
 }
 
-const updateLabel = (_state: TopicListState, uuid: string, label: string): TopicListState => {
-  const topics = _state.topics.map(topic => {
-    if (topic.uuid !== uuid) {
-      return topic
-    } else {
-      return {
-        ...topic,
-        label
-      }
-    }
-  })
-
-  return {
-    ..._state,
-    topics
-  }
-}
-
-const updateText = (_state: TopicListState, uuid: string, text: string): TopicListState => {
-  const topics = _state.topics.map(topic => {
-    if (topic.uuid !== uuid) {
-      return topic
-    } else {
-      return {
-        ...topic,
-        text
-      }
-    }
-  })
-
-  return {
-    ..._state,
-    topics
-  }
-}
-
 export default function TopicListReducer(state: TopicListState = initialState, action: ActionType): TopicListState {
   switch (action.type) {
-    case 'TOPIC_LIST_NEW_TOPIC':
-      return newTopic(state)
-
     case 'TOPIC_LIST_EDIT_LABEL':
-      return editLabel(state, action.payload.label)
+      return editLabel(state, action.payload.uuid, action.payload.label)
 
-    case 'TOPIC_LIST_DONE':
-      return done(state)
+    case 'TOPIC_LIST_EDIT_TEXT':
+      return editText(state, action.payload.uuid, action.payload.text)
 
-    case 'TOPIC_LIST_CANCEL':
-      return cancel(state)
+    case 'TOPIC_LIST_ADD':
+      return add(state, action.payload.label, action.payload.text)
 
     case 'TOPIC_LIST_REMOVE':
       return remove(state, action.payload.uuid)
 
     case 'TOPIC_LIST_LOAD_TOPICS':
       return loadTopics(state, action.payload.topics)
-
-    case 'TOPIC_LIST_UPDATE_LABEL':
-      return updateLabel(state, action.payload.uuid, action.payload.label)
-
-    case 'TOPIC_LIST_UPDATE_TEXT':
-      return updateText(state, action.payload.uuid, action.payload.text)
 
     default:
       return state

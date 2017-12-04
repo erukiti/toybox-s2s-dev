@@ -1,18 +1,15 @@
 import * as assert from 'assert'
 
 import { store } from '../../'
+import { repositories } from '../../../repository'
 import { TopicListDispatchAction } from '../actions'
 
 export class TopicListAction extends TopicListDispatchAction {
   public _first() {
-    // this.topicList.loadTopics(loadTopics('_'))
+    this._dispatch.topicList.loadTopics(repositories.topic.get())
   }
 
   public startRef(uuid: string) {
-    const state = store.getState()
-    const topic = state.topicList.topics.find(topic2 => topic2.uuid === uuid)
-    assert(topic)
-    this._dispatch.topicReference.start(topic.uuid, topic.label, topic.text)
-    this._dispatch.app.changeMode('topic')
+    this._dispatch.app.open(0, 'topic', uuid)
   }
 }

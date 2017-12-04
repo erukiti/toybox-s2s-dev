@@ -6,6 +6,7 @@ import { State } from './reducers'
 
 export type Props = State & { act: Actions }
 
+let isFirst = true
 export const connector = <T>(component) => {
   const mapStateToProps = (state: State) => {
     return state
@@ -18,8 +19,6 @@ export const connector = <T>(component) => {
   const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch })
 
   const actions = new Actions()
-
-  let isFirst = true
 
   const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps): Props | T => {
     actions.setDispatch(dispatch)

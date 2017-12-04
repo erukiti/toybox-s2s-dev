@@ -11,14 +11,14 @@ const indexPlugin = (meta, opts) => {
     const name = arr[arr.length - 1]
     const upperName = toUpperCamelCase(name)
 
-    const actionSource = `import { ${upperName} } from '../actions'
+    const actionSource = `import { ${upperName}DispatchAction } from '../actions'
 
 export class ${upperName}Action extends ${upperName}DispatchAction {}
 `
 
     const reducerSource = `import { ActionType } from '../actions'
 
-export type ${upperName}State = {
+export interface ${upperName}State {
 
 }
 
@@ -40,7 +40,7 @@ export default function ${upperName}Reducer(state: ${upperName}State = initialSt
 import { connector, Props } from '../connector'
 
 class ${upperName}Component extends React.Component<Props> {
-  render() {
+  public render() {
     return <div />
   }
 }

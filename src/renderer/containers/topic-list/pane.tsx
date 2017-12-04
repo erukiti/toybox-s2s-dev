@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import Editor from 'react-ace'
 import { Box, Flex, Heading, Input } from 'rebass'
 
@@ -7,21 +8,24 @@ import { connector, Props } from '../connector'
 
 requireAllAcePlugins()
 
-class TopicReferenceComponent extends React.Component<Props> {
+interface OwnProps {
+  uuid: string
+}
+
+class TopicPane extends React.Component<Props & OwnProps> {
   public render() {
+    const { uuid } = this.props
+    const topic = this.props.topicList.topics.find(v => v.uuid === uuid)
     return (
       <Flex direction="column" style={{ height: '100%' }}>
         <Box>
-          <Heading>トピック</Heading>
-          <Input
-            value={this.props.topicReference.label}
-            onChange={e => this.props.act.topicReference.editLabel(e.target.value)}
-          />
+          <span>トピック</span>
+          <Input value={topic.label} onChange={v => this.props.act.topicList.editLabel(uuid, v.target.value)} />
         </Box>
         <Box flex="1">
           <Editor
-            onChange={value => this.props.act.topicReference.editText(value)}
-            value={this.props.topicReference.text}
+            onChange={v => this.props.act.topicList.editText(uuid, v)}
+            value={topic.text}
             mode="markdown"
             theme="textmate"
             width="100%"
@@ -35,4 +39,4 @@ class TopicReferenceComponent extends React.Component<Props> {
   }
 }
 
-export default connector(TopicReferenceComponent)
+export default connector(TopicPane)

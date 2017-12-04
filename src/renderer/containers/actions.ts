@@ -1,12 +1,13 @@
 // GENERATED! DON'T TOUCH ME!
-
 import { Dispatch as ReduxDispatch } from 'redux'
 
 export type ActionType =
-  | { type: 'APP_CHANGE_MODE'; payload: { mode: string } }
-  | { type: 'BOARD_LIST_LOAD'; payload: { boards: any[] } }
+  | { type: 'APP_ADD_PANE'; payload: {} }
+  | { type: 'APP_OPEN'; payload: { paneIndex: number; mode: string; uuid: string } }
   | { type: 'BOARD_LOAD'; payload: { boards: any[] } }
-  | { type: 'BOARD_CREATE'; payload: {} }
+  | { type: 'BOARD_CREATE'; payload: { board: any } }
+  | { type: 'BOARD_EDIT_LABEL'; payload: { uuid: string; label: string } }
+  | { type: 'BOARD_CHANGE_TOPICS_IDS'; payload: { uuid: string; topicId: string } }
   | { type: 'ITEM_TEXT_LOAD'; payload: { items: any[] } }
   | { type: 'ITEM_TEXT_CREATE'; payload: {} }
   | { type: 'ITEM_TEXT_EDIT_LABEL'; payload: { uuid: string; label: string } }
@@ -14,17 +15,14 @@ export type ActionType =
   | { type: 'ITEM_TEXT_EDIT_LANG'; payload: { uuid: string; lang: string } }
   | { type: 'SANDBOX_EDIT_CODE'; payload: { code: string } }
   | { type: 'SANDBOX_RUN'; payload: { count: number; result: string; date: number } }
-  | { type: 'TOPIC_LIST_NEW_TOPIC'; payload: {} }
-  | { type: 'TOPIC_LIST_EDIT_LABEL'; payload: { label: string } }
-  | { type: 'TOPIC_LIST_DONE'; payload: {} }
-  | { type: 'TOPIC_LIST_CANCEL'; payload: {} }
+  | { type: 'TOPIC_ADD_EDIT_LABEL'; payload: { label: string } }
+  | { type: 'TOPIC_ADD_EDIT_TEXT'; payload: { text: string } }
+  | { type: 'TOPIC_ADD_CLEAR'; payload: {} }
+  | { type: 'TOPIC_LIST_EDIT_LABEL'; payload: { uuid: string; label: string } }
+  | { type: 'TOPIC_LIST_EDIT_TEXT'; payload: { uuid: string; text: string } }
+  | { type: 'TOPIC_LIST_ADD'; payload: { label: string; text: string } }
   | { type: 'TOPIC_LIST_REMOVE'; payload: { uuid: string } }
   | { type: 'TOPIC_LIST_LOAD_TOPICS'; payload: { topics: any[] } }
-  | { type: 'TOPIC_LIST_UPDATE_LABEL'; payload: { uuid: string; label: string } }
-  | { type: 'TOPIC_LIST_UPDATE_TEXT'; payload: { uuid: string; text: string } }
-  | { type: 'TOPIC_REFERENCE_START'; payload: { uuid: string; label: string; text: string } }
-  | { type: 'TOPIC_REFERENCE_EDIT_LABEL'; payload: { label: string } }
-  | { type: 'TOPIC_REFERENCE_EDIT_TEXT'; payload: { text: string } }
 
 class Dispatcher {
   private _dispatch: ReduxDispatch<ActionType>
@@ -34,14 +32,14 @@ class Dispatcher {
   }
 
   public app: {
-    changeMode: (mode: string) => void
-  }
-  public boardList: {
-    load: (boards: any[]) => void
+    addPane: () => void
+    open: (paneIndex: number, mode: string, uuid: string) => void
   }
   public board: {
     load: (boards: any[]) => void
-    create: () => void
+    create: (board: any) => void
+    editLabel: (uuid: string, label: string) => void
+    changeTopicsIds: (uuid: string, topicId: string) => void
   }
   public itemText: {
     load: (items: any[]) => void
@@ -54,32 +52,32 @@ class Dispatcher {
     editCode: (code: string) => void
     run: (count: number, result: string, date: number) => void
   }
-  public topicList: {
-    newTopic: () => void
-    editLabel: (label: string) => void
-    done: () => void
-    cancel: () => void
-    remove: (uuid: string) => void
-    loadTopics: (topics: any[]) => void
-    updateLabel: (uuid: string, label: string) => void
-    updateText: (uuid: string, text: string) => void
-  }
-  public topicReference: {
-    start: (uuid: string, label: string, text: string) => void
+  public topicAdd: {
     editLabel: (label: string) => void
     editText: (text: string) => void
+    clear: () => void
+  }
+  public topicList: {
+    editLabel: (uuid: string, label: string) => void
+    editText: (uuid: string, text: string) => void
+    add: (label: string, text: string) => void
+    remove: (uuid: string) => void
+    loadTopics: (topics: any[]) => void
   }
 
   constructor() {
     this.app = {
-      changeMode: (mode: string) => this._dispatch({ type: 'APP_CHANGE_MODE', payload: { mode } })
-    }
-    this.boardList = {
-      load: (boards: any[]) => this._dispatch({ type: 'BOARD_LIST_LOAD', payload: { boards } })
+      addPane: () => this._dispatch({ type: 'APP_ADD_PANE', payload: {} }),
+      open: (paneIndex: number, mode: string, uuid: string) =>
+        this._dispatch({ type: 'APP_OPEN', payload: { paneIndex, mode, uuid } })
     }
     this.board = {
       load: (boards: any[]) => this._dispatch({ type: 'BOARD_LOAD', payload: { boards } }),
-      create: () => this._dispatch({ type: 'BOARD_CREATE', payload: {} })
+      create: (board: any) => this._dispatch({ type: 'BOARD_CREATE', payload: { board } }),
+      editLabel: (uuid: string, label: string) =>
+        this._dispatch({ type: 'BOARD_EDIT_LABEL', payload: { uuid, label } }),
+      changeTopicsIds: (uuid: string, topicId: string) =>
+        this._dispatch({ type: 'BOARD_CHANGE_TOPICS_IDS', payload: { uuid, topicId } })
     }
     this.itemText = {
       load: (items: any[]) => this._dispatch({ type: 'ITEM_TEXT_LOAD', payload: { items } }),
@@ -95,23 +93,19 @@ class Dispatcher {
       run: (count: number, result: string, date: number) =>
         this._dispatch({ type: 'SANDBOX_RUN', payload: { count, result, date } })
     }
-    this.topicList = {
-      newTopic: () => this._dispatch({ type: 'TOPIC_LIST_NEW_TOPIC', payload: {} }),
-      editLabel: (label: string) => this._dispatch({ type: 'TOPIC_LIST_EDIT_LABEL', payload: { label } }),
-      done: () => this._dispatch({ type: 'TOPIC_LIST_DONE', payload: {} }),
-      cancel: () => this._dispatch({ type: 'TOPIC_LIST_CANCEL', payload: {} }),
-      remove: (uuid: string) => this._dispatch({ type: 'TOPIC_LIST_REMOVE', payload: { uuid } }),
-      loadTopics: (topics: any[]) => this._dispatch({ type: 'TOPIC_LIST_LOAD_TOPICS', payload: { topics } }),
-      updateLabel: (uuid: string, label: string) =>
-        this._dispatch({ type: 'TOPIC_LIST_UPDATE_LABEL', payload: { uuid, label } }),
-      updateText: (uuid: string, text: string) =>
-        this._dispatch({ type: 'TOPIC_LIST_UPDATE_TEXT', payload: { uuid, text } })
+    this.topicAdd = {
+      editLabel: (label: string) => this._dispatch({ type: 'TOPIC_ADD_EDIT_LABEL', payload: { label } }),
+      editText: (text: string) => this._dispatch({ type: 'TOPIC_ADD_EDIT_TEXT', payload: { text } }),
+      clear: () => this._dispatch({ type: 'TOPIC_ADD_CLEAR', payload: {} })
     }
-    this.topicReference = {
-      start: (uuid: string, label: string, text: string) =>
-        this._dispatch({ type: 'TOPIC_REFERENCE_START', payload: { uuid, label, text } }),
-      editLabel: (label: string) => this._dispatch({ type: 'TOPIC_REFERENCE_EDIT_LABEL', payload: { label } }),
-      editText: (text: string) => this._dispatch({ type: 'TOPIC_REFERENCE_EDIT_TEXT', payload: { text } })
+    this.topicList = {
+      editLabel: (uuid: string, label: string) =>
+        this._dispatch({ type: 'TOPIC_LIST_EDIT_LABEL', payload: { uuid, label } }),
+      editText: (uuid: string, text: string) =>
+        this._dispatch({ type: 'TOPIC_LIST_EDIT_TEXT', payload: { uuid, text } }),
+      add: (label: string, text: string) => this._dispatch({ type: 'TOPIC_LIST_ADD', payload: { label, text } }),
+      remove: (uuid: string) => this._dispatch({ type: 'TOPIC_LIST_REMOVE', payload: { uuid } }),
+      loadTopics: (topics: any[]) => this._dispatch({ type: 'TOPIC_LIST_LOAD_TOPICS', payload: { topics } })
     }
   }
 }
@@ -131,14 +125,11 @@ export class DispatchAction {
 }
 
 export class AppDispatchAction extends DispatchAction {
-  public changeMode(mode: string) {
-    this._dispatch.app.changeMode(mode)
+  public addPane() {
+    this._dispatch.app.addPane()
   }
-}
-
-export class BoardListDispatchAction extends DispatchAction {
-  public load(boards: any[]) {
-    this._dispatch.boardList.load(boards)
+  public open(paneIndex: number, mode: string, uuid: string) {
+    this._dispatch.app.open(paneIndex, mode, uuid)
   }
 }
 
@@ -146,8 +137,14 @@ export class BoardDispatchAction extends DispatchAction {
   public load(boards: any[]) {
     this._dispatch.board.load(boards)
   }
-  public create() {
-    this._dispatch.board.create()
+  public create(board: any) {
+    this._dispatch.board.create(board)
+  }
+  public editLabel(uuid: string, label: string) {
+    this._dispatch.board.editLabel(uuid, label)
+  }
+  public changeTopicsIds(uuid: string, topicId: string) {
+    this._dispatch.board.changeTopicsIds(uuid, topicId)
   }
 }
 
@@ -178,18 +175,27 @@ export class SandboxDispatchAction extends DispatchAction {
   }
 }
 
-export class TopicListDispatchAction extends DispatchAction {
-  public newTopic() {
-    this._dispatch.topicList.newTopic()
-  }
+export class TopicAddDispatchAction extends DispatchAction {
   public editLabel(label: string) {
-    this._dispatch.topicList.editLabel(label)
+    this._dispatch.topicAdd.editLabel(label)
   }
-  public done() {
-    this._dispatch.topicList.done()
+  public editText(text: string) {
+    this._dispatch.topicAdd.editText(text)
   }
-  public cancel() {
-    this._dispatch.topicList.cancel()
+  public clear() {
+    this._dispatch.topicAdd.clear()
+  }
+}
+
+export class TopicListDispatchAction extends DispatchAction {
+  public editLabel(uuid: string, label: string) {
+    this._dispatch.topicList.editLabel(uuid, label)
+  }
+  public editText(uuid: string, text: string) {
+    this._dispatch.topicList.editText(uuid, text)
+  }
+  public add(label: string, text: string) {
+    this._dispatch.topicList.add(label, text)
   }
   public remove(uuid: string) {
     this._dispatch.topicList.remove(uuid)
@@ -197,59 +203,37 @@ export class TopicListDispatchAction extends DispatchAction {
   public loadTopics(topics: any[]) {
     this._dispatch.topicList.loadTopics(topics)
   }
-  public updateLabel(uuid: string, label: string) {
-    this._dispatch.topicList.updateLabel(uuid, label)
-  }
-  public updateText(uuid: string, text: string) {
-    this._dispatch.topicList.updateText(uuid, text)
-  }
-}
-
-export class TopicReferenceDispatchAction extends DispatchAction {
-  public start(uuid: string, label: string, text: string) {
-    this._dispatch.topicReference.start(uuid, label, text)
-  }
-  public editLabel(label: string) {
-    this._dispatch.topicReference.editLabel(label)
-  }
-  public editText(text: string) {
-    this._dispatch.topicReference.editText(text)
-  }
 }
 
 import { AppAction } from './app/action'
-import { BoardListAction } from './board-list/action'
 import { BoardAction } from './board/action'
 import { ItemTextAction } from './item-text/action'
 import { SandboxAction } from './sandbox/action'
+import { TopicAddAction } from './topic-add/action'
 import { TopicListAction } from './topic-list/action'
-import { TopicReferenceAction } from './topic-reference/action'
 
 export class Actions {
   public app: AppAction
-  public boardList: BoardListAction
   public board: BoardAction
   public itemText: ItemTextAction
   public sandbox: SandboxAction
+  public topicAdd: TopicAddAction
   public topicList: TopicListAction
-  public topicReference: TopicReferenceAction
   constructor() {
     this.app = new AppAction()
-    this.boardList = new BoardListAction()
     this.board = new BoardAction()
     this.itemText = new ItemTextAction()
     this.sandbox = new SandboxAction()
+    this.topicAdd = new TopicAddAction()
     this.topicList = new TopicListAction()
-    this.topicReference = new TopicReferenceAction()
   }
 
   public setDispatch(dispatch: ReduxDispatch<ActionType>) {
     this.app.setDispatch(dispatch)
-    this.boardList.setDispatch(dispatch)
     this.board.setDispatch(dispatch)
     this.itemText.setDispatch(dispatch)
     this.sandbox.setDispatch(dispatch)
+    this.topicAdd.setDispatch(dispatch)
     this.topicList.setDispatch(dispatch)
-    this.topicReference.setDispatch(dispatch)
   }
 }

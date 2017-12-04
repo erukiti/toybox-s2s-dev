@@ -9,17 +9,26 @@ const { transform: babelTransform, File } = babel
 import { BabylonOptions, parse } from 'babylon'
 const prettier = require('prettier')
 import babelGenerate from '@babel/generator'
+import { Configuration, Linter } from 'tslint'
 
 export const createMetaTools = (opts, inputFilename) => {
-  const generatorType = opts.generator || 'prettier'
-  const generators = {
-    babel: ast => babelGenerate(ast).code,
-    prettier: ast => {
-      const prettierOpts = prettier.resolveConfig.sync(process.cwd())
-      return prettier.format(babelGenerate(ast).code, prettierOpts)
+  const linter = new Linter({ fix: true })
+  const generate = ast => {
+    const { code } = babelGenerate(ast)
+    const prettierOpts = {
+      ...prettier.resolveConfig.sync(process.cwd()),
+      parser: 'typescript'
+    }
+    const code2 = prettier.format(code, prettierOpts)
+    const conf = Configuration.findConfiguration('tslint.json', inputFilename).results
+    linter.lint(inputFilename, code2, conf)
+    const { fixes } = linter.getResult()
+    if (fixes.length > 0) {
+      return fixes[fixes.length - 1].getRawLines()
+    } else {
+      return code2
     }
   }
-  const generate = generators[generatorType]
 
   const babylonPlugins = opts.babylonPlugins || []
   if (babylonPlugins.length === 0 && inputFilename.substr(-3) === '.ts') {

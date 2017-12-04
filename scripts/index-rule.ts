@@ -11,23 +11,9 @@ const indexPlugin = (meta, opts) => {
     const name = arr[arr.length - 1]
     const upperName = toUpperCamelCase(name)
 
-    const actionSource = `import { store } from '../'
-import { Dispatcher } from '../actions'
+    const actionSource = `import { ${upperName} } from '../actions'
 
-
-export default class ${upperName}ActionCreator {
-  _dispatch: Dispatcher
-
-  constructor(dispatcher: Dispatcher) {
-    this._dispatch = dispatcher
-  }
-
-  _first() {
-
-  }
-
-
-}
+export class ${upperName}Action extends ${upperName}DispatchAction {}
 `
 
     const reducerSource = `import { ActionType } from '../actions'
@@ -49,67 +35,21 @@ export default function ${upperName}Reducer(state: ${upperName}State = initialSt
 }
 `
 
-    const componentSource = `import * as React from 'react'
-import {${upperName}Props} from './index'
+    const indexSource = `import * as React from 'react'
 
-export default class ${upperName}Component extends React.Component<${upperName}Props> {
+import { connector, Props } from '../connector'
+
+class ${upperName}Component extends React.Component<Props> {
   render() {
-    return <div>
-    </div>
+    return <div />
   }
 }
-`
 
-    const indexSource = `import { connect } from 'react-redux'
-import { Dispatch as ReduxDispatch } from 'redux'
-
-import ${upperName}Component from './component'
-import { State } from '../reducers'
-import { Dispatcher, ActionType } from '../actions'
-import ${upperName}ActionCreator from './action'
-
-const mapStateToProps = (state: State) => {
-    return state
-}
-
-type DispatchProps = {dispatch: ReduxDispatch<ActionType>}
-
-const mapDispatchToProps = (dispatch: ReduxDispatch<ActionType>) => ({ dispatch })
-
-export type ${upperName}Props = State & ${upperName}ActionCreator
-
-const dispatcher = new Dispatcher()
-const actions = new ${upperName}ActionCreator(dispatcher)
-
-let isFirst = true
-
-const mergeProps = (stateProps: State, { dispatch }: DispatchProps, ownProps) => {
-  dispatcher.setDispatch(dispatch)
-  if (isFirst && '_first' in actions) {
-    actions['_first']()
-    isFirst = false
-  }
-
-  const props = {
-    ...stateProps,
-    ...ownProps
-  }
-
-  Object.getOwnPropertyNames(Object.getPrototypeOf(actions))
-    .filter(key => key !== 'constructor' && key.substr(0, 1) !== '_')
-    .forEach(key => {
-      props[key] = actions[key].bind(actions)
-    })
-
-  return props
-}
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(${upperName}Component)
+export default connector(${upperName}Component)
 `
 
     createFileSync(path.join(path.dirname(fileName), 'action.ts'), actionSource)
     createFileSync(path.join(path.dirname(fileName), 'reducer.ts'), reducerSource)
-    createFileSync(path.join(path.dirname(fileName), 'component.tsx'), componentSource)
     return indexSource
   }
 

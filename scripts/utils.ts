@@ -1,11 +1,29 @@
 import * as fs from 'fs'
+import { Configuration, Linter } from 'tslint'
+const prettier = require('prettier')
 
+export const writeSourceSync = (filename, content) => {
+  const prettierOpts = {
+    ...prettier.resolveConfig.sync(process.cwd()),
+    parser: 'typescript'
+  }
+  const code = prettier.format(content, prettierOpts)
+  const linter = new Linter({ fix: true })
+  const conf = Configuration.findConfiguration('tslint.json', filename).results
+  linter.lint(filename, code, conf)
+  const { fixes } = linter.getResult()
+  if (fixes.length > 0) {
+    fs.writeFileSync(filename, fixes[fixes.length - 1].getRawLines())
+  } else {
+    fs.writeFileSync(filename, code)
+  }
+}
 export const createFileSync = (filename, content) => {
   if (fs.existsSync(filename)) {
     console.log(`already exists: ${filename}`)
     return
   }
-  fs.writeFileSync(filename, content)
+  writeSourceSync(filename, content)
 }
 
 export const toUpperCamelCase = s =>

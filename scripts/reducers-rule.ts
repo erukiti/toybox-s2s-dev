@@ -1,10 +1,10 @@
-const globby = require('globby')
-const assert = require('assert')
-const path = require('path')
-const fs = require('fs')
-
+import * as assert from 'assert'
+import * as fs from 'fs'
 import { getSelectors } from 'meta-programming-utils'
-import { toLowerCamelCase, toUpperCamelCase, toUpperSnakeCase } from './utils'
+import * as path from 'path'
+const globby = require('globby')
+
+import { toLowerCamelCase, toUpperCamelCase, toUpperSnakeCase, writeSourceSync } from './utils'
 
 const re = /([^/]+)\/reducer\./
 const WasCreated = Symbol('WasCreated')
@@ -58,14 +58,22 @@ const reducersPlugin = (meta, opts) => {
     })
 
     const extractArgs = args => args.map(arg => `${arg.name}: ${arg.type}`).join(', ')
-    const extractPayload = args => `{${extractArgs(args)}}`
-    const extractPayloadWithoutType = args => `{${args.map(arg => arg.name).join(', ')}}`
+    const extractPayload = args => (args.length > 0 ? `{ ${extractArgs(args).replace(/,/g, ';')} }` : '{}')
+    const extractPayloadWithoutType = args => (args.length > 0 ? `{ ${args.map(arg => arg.name).join(', ')} }` : '{}')
+
+    const dirs = [...new Set(actions.map(act => act.dir))]
+
+    const actionImports = dirs
+      .map(dir => {
+        return `import { ${toUpperCamelCase(dir)}Action } from './${dir}/action'\n`
+      })
+      .join('')
 
     const actionTypes = actions
       .map(action => {
-        return `{ type: '${action.key}', payload: ${extractPayload(action.args)}, }`
+        return `  | { type: '${action.key}'; payload: ${extractPayload(action.args)} }`
       })
-      .join(' |\n')
+      .join('\n')
 
     const properties = {}
     actions.forEach(action => {
@@ -75,9 +83,25 @@ const reducersPlugin = (meta, opts) => {
 
       properties[toLowerCamelCase(action.dir)][action.name] = {
         args: `(${extractArgs(action.args)})`,
-        dispatch: `this._dispatch({type: '${action.key}', payload: ${extractPayloadWithoutType(action.args)}})`
+        dispatch: `this._dispatch({ type: '${action.key}', payload: ${extractPayloadWithoutType(action.args)} })`
       }
     })
+
+    const dispatchActions = dirs
+      .map(dir => {
+        return `export class ${toUpperCamelCase(dir)}DispatchAction extends DispatchAction {
+${actions
+          .filter(act => act.dir === dir)
+          .map(act => {
+            return `  public ${act.name}(${extractArgs(act.args)}) { this._dispatch.${toLowerCamelCase(dir)}.${
+              act.name
+            }(${act.args.map(arg => arg.name).join(', ')}) }`
+          })
+          .join('\n')}
+}
+`
+      })
+      .join('\n')
 
     // FIXME: types.ts を parse して全部 import する
 
@@ -87,15 +111,19 @@ import { Dispatch as ReduxDispatch } from 'redux'
 export type ActionType =
 ${actionTypes}
 
-export class Dispatcher {
+class Dispatcher {
   private _dispatch: ReduxDispatch<ActionType>
+
+  public setDispatch(dispatch: ReduxDispatch<ActionType>) {
+    this._dispatch = dispatch
+  }
 
 ${Object.keys(properties)
       .map(
-        key => `  ${key}: {
+        key => `  public ${key}: {
 ${Object.keys(properties[key])
           .map(methodName => `    ${methodName}: ${properties[key][methodName].args} => void`)
-          .join(',\n')}
+          .join('\n')}
   }`
       )
       .join('\n')}
@@ -114,9 +142,34 @@ ${Object.keys(properties[key])
       )
       .join('\n')}
   }
+}
 
-  setDispatch(dispatch: ReduxDispatch<ActionType>) {
-    this._dispatch = dispatch
+export class DispatchAction {
+  protected _dispatch: Dispatcher
+
+  public _first() {}
+
+  constructor() {
+    this._dispatch = new Dispatcher()
+  }
+
+  public setDispatch(dispatch: ReduxDispatch<ActionType>) {
+    this._dispatch.setDispatch(dispatch)
+  }
+}
+
+${dispatchActions}
+
+${actionImports}
+
+export class Actions {
+${dirs.map(dir => `  public ${toLowerCamelCase(dir)}: ${toUpperCamelCase(dir)}Action`).join('\n')}
+  constructor() {
+${dirs.map(dir => `    this.${toLowerCamelCase(dir)} = new ${toUpperCamelCase(dir)}Action()`).join('\n')}
+  }
+
+  public setDispatch(dispatch: ReduxDispatch<ActionType>) {
+${dirs.map(dir => `    this.${toLowerCamelCase(dir)}.setDispatch(dispatch)`).join('\n')}
   }
 }
 `
@@ -172,8 +225,8 @@ ${names.map(name => `  ${toLowerCamelCase(name)}: ${toLowerCamelCase(name)}Reduc
       }
     })
 
-    fs.writeFileSync(path.join(path.dirname(fileName), '..', 'actions.ts'), actionsSource)
-    fs.writeFileSync(path.join(path.dirname(fileName), '..', 'reducers.ts'), reducersSource)
+    writeSourceSync(path.join(path.dirname(fileName), '..', 'actions.ts'), actionsSource)
+    writeSourceSync(path.join(path.dirname(fileName), '..', 'reducers.ts'), reducersSource)
 
     return result
   }

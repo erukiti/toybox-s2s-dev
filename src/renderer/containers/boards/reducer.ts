@@ -33,10 +33,25 @@ const editLabel = (_state: BoardsState, uuid: string, label: string): BoardsStat
 }
 
 const changeTopicsIds = (_state: BoardsState, uuid: string, topicId: string): BoardsState => {
-  const topicIds = _state.boards.find(v => v.uuid === uuid).topicIds
+  const board = _state.boards.find(v => v.uuid === uuid)
+
+  let topicIds
+
+  if (board.topicIds.includes(topicId)) {
+    topicIds = board.topicIds.filter(v => v !== topicId)
+  } else {
+    topicIds = [...board.topicIds, topicId]
+  }
 
   return {
     boards: changeProperty(_state.boards, uuid, 'topicIds', topicIds)
+  }
+}
+
+const addItem = (_state: BoardsState, uuid: string, itemId: string): BoardsState => {
+  const itemIds = [..._state.boards.find(v => v.uuid === uuid).itemIds, itemId]
+  return {
+    boards: changeProperty(_state.boards, uuid, 'itemIds', itemIds)
   }
 }
 
@@ -53,6 +68,9 @@ export default function BoardsReducer(state: BoardsState = initialState, action:
 
     case 'BOARDS_CHANGE_TOPICS_IDS':
       return changeTopicsIds(state, action.payload.uuid, action.payload.topicId)
+
+    case 'BOARDS_ADD_ITEM':
+      return addItem(state, action.payload.uuid, action.payload.itemId)
 
     default:
       return state

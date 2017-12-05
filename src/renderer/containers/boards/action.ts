@@ -19,7 +19,7 @@ export class BoardsAction extends BoardsDispatchAction {
       createdAt: 0,
       updatedAt: 0,
       topicIds: [],
-      items: []
+      itemIds: []
     }
     this._dispatch.boards.create(board)
     this._dispatch.app.open(0, 'board', board.uuid)

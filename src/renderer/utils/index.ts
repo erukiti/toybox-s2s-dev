@@ -29,5 +29,7 @@ export const changeProperty = <S extends Storable, T>(items: S[], uuid: string, 
   const index = items.findIndex(v => v.uuid === uuid)
   assert(index >= 0)
   const item = Object.assign({}, items[index], { [name]: value })
-  return [...items.splice(0, index), item, ...items.splice(index + 1)]
+  const results = [...items]
+  results[index] = item
+  return results
 }

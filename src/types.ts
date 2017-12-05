@@ -16,7 +16,7 @@ export interface Topic extends Storable {
 
 export interface Board extends Storable {
   topicIds: string[]
-  items: Item[]
+  itemIds: string[]
 }
 
 export interface Item extends Storable {

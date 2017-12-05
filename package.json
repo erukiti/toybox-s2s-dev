@@ -5,9 +5,22 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "test": "tsc && ava",
+    "test": "jest",
     "fmt": "tslint --project . --fix",
     "lint": "tslint --project ."
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/scripts/test-ts.js"
+    },
+    "testMatch": [
+      "**/*.test.(ts|tsx|js)"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.34",
@@ -23,15 +36,16 @@
     "@types/babel-traverse": "^6.25.3",
     "@types/babel-types": "^6.25.2",
     "@types/babylon": "^6.16.2",
+    "@types/jest": "^21.1.8",
     "@types/node": "^8.0.54",
     "@types/react": "^16.0.26",
     "@types/react-redux": "^5.0.14",
     "@types/redux": "^3.6.0",
     "autodebugger": "^0.3.0",
-    "ava": "^0.24.0",
     "babylon": "^7.0.0-beta.34",
     "bulk-require": "^1.0.1",
     "electron": "^1.7.9",
+    "jest": "^21.2.1",
     "meta-programming-utils": "^0.1.0",
     "s2s": "^0.14.1",
     "ts-node": "^3.3.0",

@@ -8,8 +8,9 @@ export type ActionType =
   | { type: 'BOARDS_CREATE'; payload: { board: any } }
   | { type: 'BOARDS_EDIT_LABEL'; payload: { uuid: string; label: string } }
   | { type: 'BOARDS_CHANGE_TOPICS_IDS'; payload: { uuid: string; topicId: string } }
+  | { type: 'BOARDS_ADD_ITEM'; payload: { uuid: string; itemId: string } }
   | { type: 'ITEM_TEXT_LOAD'; payload: { items: any[] } }
-  | { type: 'ITEM_TEXT_CREATE'; payload: {} }
+  | { type: 'ITEM_TEXT_CREATE'; payload: { item: any } }
   | { type: 'ITEM_TEXT_EDIT_LABEL'; payload: { uuid: string; label: string } }
   | { type: 'ITEM_TEXT_EDIT_TEXT'; payload: { uuid: string; text: string } }
   | { type: 'ITEM_TEXT_EDIT_LANG'; payload: { uuid: string; lang: string } }
@@ -40,10 +41,11 @@ class Dispatcher {
     create: (board: any) => void
     editLabel: (uuid: string, label: string) => void
     changeTopicsIds: (uuid: string, topicId: string) => void
+    addItem: (uuid: string, itemId: string) => void
   }
   public itemText: {
     load: (items: any[]) => void
-    create: () => void
+    create: (item: any) => void
     editLabel: (uuid: string, label: string) => void
     editText: (uuid: string, text: string) => void
     editLang: (uuid: string, lang: string) => void
@@ -77,11 +79,12 @@ class Dispatcher {
       editLabel: (uuid: string, label: string) =>
         this._dispatch({ type: 'BOARDS_EDIT_LABEL', payload: { uuid, label } }),
       changeTopicsIds: (uuid: string, topicId: string) =>
-        this._dispatch({ type: 'BOARDS_CHANGE_TOPICS_IDS', payload: { uuid, topicId } })
+        this._dispatch({ type: 'BOARDS_CHANGE_TOPICS_IDS', payload: { uuid, topicId } }),
+      addItem: (uuid: string, itemId: string) => this._dispatch({ type: 'BOARDS_ADD_ITEM', payload: { uuid, itemId } })
     }
     this.itemText = {
       load: (items: any[]) => this._dispatch({ type: 'ITEM_TEXT_LOAD', payload: { items } }),
-      create: () => this._dispatch({ type: 'ITEM_TEXT_CREATE', payload: {} }),
+      create: (item: any) => this._dispatch({ type: 'ITEM_TEXT_CREATE', payload: { item } }),
       editLabel: (uuid: string, label: string) =>
         this._dispatch({ type: 'ITEM_TEXT_EDIT_LABEL', payload: { uuid, label } }),
       editText: (uuid: string, text: string) =>
@@ -145,14 +148,17 @@ export class BoardsDispatchAction extends DispatchAction {
   public changeTopicsIds(uuid: string, topicId: string) {
     this._dispatch.boards.changeTopicsIds(uuid, topicId)
   }
+  public addItem(uuid: string, itemId: string) {
+    this._dispatch.boards.addItem(uuid, itemId)
+  }
 }
 
 export class ItemTextDispatchAction extends DispatchAction {
   public load(items: any[]) {
     this._dispatch.itemText.load(items)
   }
-  public create() {
-    this._dispatch.itemText.create()
+  public create(item: any) {
+    this._dispatch.itemText.create(item)
   }
   public editLabel(uuid: string, label: string) {
     this._dispatch.itemText.editLabel(uuid, label)

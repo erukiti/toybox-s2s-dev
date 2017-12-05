@@ -12,19 +12,19 @@ interface OwnProps {
   uuid: string
 }
 
-class TopicPane extends React.Component<Props & OwnProps> {
+class TopicsPane extends React.Component<Props & OwnProps> {
   public render() {
     const { uuid } = this.props
-    const topic = this.props.topicList.topics.find(v => v.uuid === uuid)
+    const topic = this.props.topics.topics.find(v => v.uuid === uuid)
     return (
       <Flex direction="column" style={{ height: '100%' }}>
         <Box>
           <span>トピック</span>
-          <Input value={topic.label} onChange={v => this.props.act.topicList.editLabel(uuid, v.target.value)} />
+          <Input value={topic.label} onChange={v => this.props.act.topics.editLabel(uuid, v.target.value)} />
         </Box>
         <Box flex="1">
           <Editor
-            onChange={v => this.props.act.topicList.editText(uuid, v)}
+            onChange={v => this.props.act.topics.editText(uuid, v)}
             value={topic.text}
             mode="markdown"
             theme="textmate"
@@ -39,4 +39,4 @@ class TopicPane extends React.Component<Props & OwnProps> {
   }
 }
 
-export default connector(TopicPane)
+export default connector(TopicsPane)

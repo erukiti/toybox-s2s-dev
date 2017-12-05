@@ -2,26 +2,26 @@ import * as uuidv4 from 'uuid-v4'
 import { Topic } from '../../../types'
 import { changeProperty } from '../../utils'
 import { ActionType } from '../actions'
-export interface TopicListState {
+export interface TopicsState {
   topics: Topic[]
 }
-const initialState: TopicListState = {
+const initialState: TopicsState = {
   topics: []
 }
 
-const editLabel = (_state: TopicListState, uuid: string, label: string): TopicListState => {
+const editLabel = (_state: TopicsState, uuid: string, label: string): TopicsState => {
   return {
     topics: changeProperty(_state.topics, uuid, 'label', label)
   }
 }
 
-const editText = (_state: TopicListState, uuid: string, text: string): TopicListState => {
+const editText = (_state: TopicsState, uuid: string, text: string): TopicsState => {
   return {
     topics: changeProperty(_state.topics, uuid, 'text', text)
   }
 }
 
-const add = (_state: TopicListState, label: string, text: string): TopicListState => {
+const add = (_state: TopicsState, label: string, text: string): TopicsState => {
   const topic: Topic = {
     label,
     text,
@@ -36,35 +36,35 @@ const add = (_state: TopicListState, label: string, text: string): TopicListStat
   }
 }
 
-const remove = (_state: TopicListState, uuid: string): TopicListState => {
+const remove = (_state: TopicsState, uuid: string): TopicsState => {
   return {
     ..._state,
     topics: _state.topics.filter(topic => topic.uuid !== uuid)
   }
 }
 
-const loadTopics = (_state: TopicListState, topics: any[]): TopicListState => {
+const loadTopics = (_state: TopicsState, topics: any[]): TopicsState => {
   return {
     ..._state,
     topics
   }
 }
 
-export default function TopicListReducer(state: TopicListState = initialState, action: ActionType): TopicListState {
+export default function TopicsReducer(state: TopicsState = initialState, action: ActionType): TopicsState {
   switch (action.type) {
-    case 'TOPIC_LIST_EDIT_LABEL':
+    case 'TOPICS_EDIT_LABEL':
       return editLabel(state, action.payload.uuid, action.payload.label)
 
-    case 'TOPIC_LIST_EDIT_TEXT':
+    case 'TOPICS_EDIT_TEXT':
       return editText(state, action.payload.uuid, action.payload.text)
 
-    case 'TOPIC_LIST_ADD':
+    case 'TOPICS_ADD':
       return add(state, action.payload.label, action.payload.text)
 
-    case 'TOPIC_LIST_REMOVE':
+    case 'TOPICS_REMOVE':
       return remove(state, action.payload.uuid)
 
-    case 'TOPIC_LIST_LOAD_TOPICS':
+    case 'TOPICS_LOAD_TOPICS':
       return loadTopics(state, action.payload.topics)
 
     default:

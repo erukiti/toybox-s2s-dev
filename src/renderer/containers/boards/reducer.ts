@@ -5,20 +5,20 @@ const uuidv4 = require('uuid-v4')
 import { Board } from '../../../types'
 import { changeProperty } from '../../utils'
 import { ActionType } from '../actions'
-export interface BoardState {
+export interface BoardsState {
   boards: Board[]
 }
-const initialState: BoardState = {
+const initialState: BoardsState = {
   boards: []
 }
 
-const load = (_state: BoardState, boards: any[]): BoardState => {
+const load = (_state: BoardsState, boards: any[]): BoardsState => {
   return {
     boards
   }
 }
 
-const create = (_state: BoardState, board: any): BoardState => {
+const create = (_state: BoardsState, board: any): BoardsState => {
   const uuid = uuidv4()
   assert(!_state.boards.find(v => v.uuid === uuid))
   return {
@@ -26,13 +26,13 @@ const create = (_state: BoardState, board: any): BoardState => {
   }
 }
 
-const editLabel = (_state: BoardState, uuid: string, label: string): BoardState => {
+const editLabel = (_state: BoardsState, uuid: string, label: string): BoardsState => {
   return {
     boards: changeProperty(_state.boards, uuid, 'label', label)
   }
 }
 
-const changeTopicsIds = (_state: BoardState, uuid: string, topicId: string): BoardState => {
+const changeTopicsIds = (_state: BoardsState, uuid: string, topicId: string): BoardsState => {
   const topicIds = _state.boards.find(v => v.uuid === uuid).topicIds
 
   return {
@@ -40,18 +40,18 @@ const changeTopicsIds = (_state: BoardState, uuid: string, topicId: string): Boa
   }
 }
 
-export default function BoardReducer(state: BoardState = initialState, action: ActionType): BoardState {
+export default function BoardsReducer(state: BoardsState = initialState, action: ActionType): BoardsState {
   switch (action.type) {
-    case 'BOARD_LOAD':
+    case 'BOARDS_LOAD':
       return load(state, action.payload.boards)
 
-    case 'BOARD_CREATE':
+    case 'BOARDS_CREATE':
       return create(state, action.payload.board)
 
-    case 'BOARD_EDIT_LABEL':
+    case 'BOARDS_EDIT_LABEL':
       return editLabel(state, action.payload.uuid, action.payload.label)
 
-    case 'BOARD_CHANGE_TOPICS_IDS':
+    case 'BOARDS_CHANGE_TOPICS_IDS':
       return changeTopicsIds(state, action.payload.uuid, action.payload.topicId)
 
     default:

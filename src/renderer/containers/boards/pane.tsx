@@ -14,12 +14,12 @@ interface OwnProps {
 class BoardPane extends React.Component<Props & OwnProps> {
   public render() {
     const { uuid } = this.props
-    const board = this.props.board.boards.find(v => v.uuid === uuid)
+    const board = this.props.boards.boards.find(v => v.uuid === uuid)
     return (
       <Flex direction="column" style={{ height: '100%' }}>
         <Box>
           <span>ボード</span>
-          <Input value={board.label} onChange={ev => this.props.act.board.editLabel(uuid, ev.target.value)} />
+          <Input value={board.label} onChange={ev => this.props.act.boards.editLabel(uuid, ev.target.value)} />
         </Box>
       </Flex>
     )

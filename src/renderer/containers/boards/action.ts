@@ -4,11 +4,11 @@ const uuidv4 = require('uuid-v4')
 import { store } from '../../'
 import { repositories } from '../../../repository'
 import { Board } from '../../../types'
-import { BoardDispatchAction } from '../actions'
+import { BoardsDispatchAction } from '../actions'
 
-export class BoardAction extends BoardDispatchAction {
+export class BoardsAction extends BoardsDispatchAction {
   public _first() {
-    this._dispatch.board.load(repositories.board.get())
+    this._dispatch.boards.load(repositories.board.get())
   }
 
   public create() {
@@ -21,7 +21,7 @@ export class BoardAction extends BoardDispatchAction {
       topicIds: [],
       items: []
     }
-    this._dispatch.board.create(board)
+    this._dispatch.boards.create(board)
     this._dispatch.app.open(0, 'board', board.uuid)
   }
 

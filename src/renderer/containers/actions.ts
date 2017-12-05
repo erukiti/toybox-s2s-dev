@@ -4,10 +4,10 @@ import { Dispatch as ReduxDispatch } from 'redux'
 export type ActionType =
   | { type: 'APP_ADD_PANE'; payload: {} }
   | { type: 'APP_OPEN'; payload: { paneIndex: number; mode: string; uuid: string } }
-  | { type: 'BOARD_LOAD'; payload: { boards: any[] } }
-  | { type: 'BOARD_CREATE'; payload: { board: any } }
-  | { type: 'BOARD_EDIT_LABEL'; payload: { uuid: string; label: string } }
-  | { type: 'BOARD_CHANGE_TOPICS_IDS'; payload: { uuid: string; topicId: string } }
+  | { type: 'BOARDS_LOAD'; payload: { boards: any[] } }
+  | { type: 'BOARDS_CREATE'; payload: { board: any } }
+  | { type: 'BOARDS_EDIT_LABEL'; payload: { uuid: string; label: string } }
+  | { type: 'BOARDS_CHANGE_TOPICS_IDS'; payload: { uuid: string; topicId: string } }
   | { type: 'ITEM_TEXT_LOAD'; payload: { items: any[] } }
   | { type: 'ITEM_TEXT_CREATE'; payload: {} }
   | { type: 'ITEM_TEXT_EDIT_LABEL'; payload: { uuid: string; label: string } }
@@ -18,11 +18,11 @@ export type ActionType =
   | { type: 'TOPIC_ADD_EDIT_LABEL'; payload: { label: string } }
   | { type: 'TOPIC_ADD_EDIT_TEXT'; payload: { text: string } }
   | { type: 'TOPIC_ADD_CLEAR'; payload: {} }
-  | { type: 'TOPIC_LIST_EDIT_LABEL'; payload: { uuid: string; label: string } }
-  | { type: 'TOPIC_LIST_EDIT_TEXT'; payload: { uuid: string; text: string } }
-  | { type: 'TOPIC_LIST_ADD'; payload: { label: string; text: string } }
-  | { type: 'TOPIC_LIST_REMOVE'; payload: { uuid: string } }
-  | { type: 'TOPIC_LIST_LOAD_TOPICS'; payload: { topics: any[] } }
+  | { type: 'TOPICS_EDIT_LABEL'; payload: { uuid: string; label: string } }
+  | { type: 'TOPICS_EDIT_TEXT'; payload: { uuid: string; text: string } }
+  | { type: 'TOPICS_ADD'; payload: { label: string; text: string } }
+  | { type: 'TOPICS_REMOVE'; payload: { uuid: string } }
+  | { type: 'TOPICS_LOAD_TOPICS'; payload: { topics: any[] } }
 
 class Dispatcher {
   private _dispatch: ReduxDispatch<ActionType>
@@ -35,7 +35,7 @@ class Dispatcher {
     addPane: () => void
     open: (paneIndex: number, mode: string, uuid: string) => void
   }
-  public board: {
+  public boards: {
     load: (boards: any[]) => void
     create: (board: any) => void
     editLabel: (uuid: string, label: string) => void
@@ -57,7 +57,7 @@ class Dispatcher {
     editText: (text: string) => void
     clear: () => void
   }
-  public topicList: {
+  public topics: {
     editLabel: (uuid: string, label: string) => void
     editText: (uuid: string, text: string) => void
     add: (label: string, text: string) => void
@@ -71,13 +71,13 @@ class Dispatcher {
       open: (paneIndex: number, mode: string, uuid: string) =>
         this._dispatch({ type: 'APP_OPEN', payload: { paneIndex, mode, uuid } })
     }
-    this.board = {
-      load: (boards: any[]) => this._dispatch({ type: 'BOARD_LOAD', payload: { boards } }),
-      create: (board: any) => this._dispatch({ type: 'BOARD_CREATE', payload: { board } }),
+    this.boards = {
+      load: (boards: any[]) => this._dispatch({ type: 'BOARDS_LOAD', payload: { boards } }),
+      create: (board: any) => this._dispatch({ type: 'BOARDS_CREATE', payload: { board } }),
       editLabel: (uuid: string, label: string) =>
-        this._dispatch({ type: 'BOARD_EDIT_LABEL', payload: { uuid, label } }),
+        this._dispatch({ type: 'BOARDS_EDIT_LABEL', payload: { uuid, label } }),
       changeTopicsIds: (uuid: string, topicId: string) =>
-        this._dispatch({ type: 'BOARD_CHANGE_TOPICS_IDS', payload: { uuid, topicId } })
+        this._dispatch({ type: 'BOARDS_CHANGE_TOPICS_IDS', payload: { uuid, topicId } })
     }
     this.itemText = {
       load: (items: any[]) => this._dispatch({ type: 'ITEM_TEXT_LOAD', payload: { items } }),
@@ -98,14 +98,13 @@ class Dispatcher {
       editText: (text: string) => this._dispatch({ type: 'TOPIC_ADD_EDIT_TEXT', payload: { text } }),
       clear: () => this._dispatch({ type: 'TOPIC_ADD_CLEAR', payload: {} })
     }
-    this.topicList = {
+    this.topics = {
       editLabel: (uuid: string, label: string) =>
-        this._dispatch({ type: 'TOPIC_LIST_EDIT_LABEL', payload: { uuid, label } }),
-      editText: (uuid: string, text: string) =>
-        this._dispatch({ type: 'TOPIC_LIST_EDIT_TEXT', payload: { uuid, text } }),
-      add: (label: string, text: string) => this._dispatch({ type: 'TOPIC_LIST_ADD', payload: { label, text } }),
-      remove: (uuid: string) => this._dispatch({ type: 'TOPIC_LIST_REMOVE', payload: { uuid } }),
-      loadTopics: (topics: any[]) => this._dispatch({ type: 'TOPIC_LIST_LOAD_TOPICS', payload: { topics } })
+        this._dispatch({ type: 'TOPICS_EDIT_LABEL', payload: { uuid, label } }),
+      editText: (uuid: string, text: string) => this._dispatch({ type: 'TOPICS_EDIT_TEXT', payload: { uuid, text } }),
+      add: (label: string, text: string) => this._dispatch({ type: 'TOPICS_ADD', payload: { label, text } }),
+      remove: (uuid: string) => this._dispatch({ type: 'TOPICS_REMOVE', payload: { uuid } }),
+      loadTopics: (topics: any[]) => this._dispatch({ type: 'TOPICS_LOAD_TOPICS', payload: { topics } })
     }
   }
 }
@@ -133,18 +132,18 @@ export class AppDispatchAction extends DispatchAction {
   }
 }
 
-export class BoardDispatchAction extends DispatchAction {
+export class BoardsDispatchAction extends DispatchAction {
   public load(boards: any[]) {
-    this._dispatch.board.load(boards)
+    this._dispatch.boards.load(boards)
   }
   public create(board: any) {
-    this._dispatch.board.create(board)
+    this._dispatch.boards.create(board)
   }
   public editLabel(uuid: string, label: string) {
-    this._dispatch.board.editLabel(uuid, label)
+    this._dispatch.boards.editLabel(uuid, label)
   }
   public changeTopicsIds(uuid: string, topicId: string) {
-    this._dispatch.board.changeTopicsIds(uuid, topicId)
+    this._dispatch.boards.changeTopicsIds(uuid, topicId)
   }
 }
 
@@ -187,53 +186,53 @@ export class TopicAddDispatchAction extends DispatchAction {
   }
 }
 
-export class TopicListDispatchAction extends DispatchAction {
+export class TopicsDispatchAction extends DispatchAction {
   public editLabel(uuid: string, label: string) {
-    this._dispatch.topicList.editLabel(uuid, label)
+    this._dispatch.topics.editLabel(uuid, label)
   }
   public editText(uuid: string, text: string) {
-    this._dispatch.topicList.editText(uuid, text)
+    this._dispatch.topics.editText(uuid, text)
   }
   public add(label: string, text: string) {
-    this._dispatch.topicList.add(label, text)
+    this._dispatch.topics.add(label, text)
   }
   public remove(uuid: string) {
-    this._dispatch.topicList.remove(uuid)
+    this._dispatch.topics.remove(uuid)
   }
   public loadTopics(topics: any[]) {
-    this._dispatch.topicList.loadTopics(topics)
+    this._dispatch.topics.loadTopics(topics)
   }
 }
 
 import { AppAction } from './app/action'
-import { BoardAction } from './board/action'
+import { BoardsAction } from './boards/action'
 import { ItemTextAction } from './item-text/action'
 import { SandboxAction } from './sandbox/action'
 import { TopicAddAction } from './topic-add/action'
-import { TopicListAction } from './topic-list/action'
+import { TopicsAction } from './topics/action'
 
 export class Actions {
   public app: AppAction
-  public board: BoardAction
+  public boards: BoardsAction
   public itemText: ItemTextAction
   public sandbox: SandboxAction
   public topicAdd: TopicAddAction
-  public topicList: TopicListAction
+  public topics: TopicsAction
   constructor() {
     this.app = new AppAction()
-    this.board = new BoardAction()
+    this.boards = new BoardsAction()
     this.itemText = new ItemTextAction()
     this.sandbox = new SandboxAction()
     this.topicAdd = new TopicAddAction()
-    this.topicList = new TopicListAction()
+    this.topics = new TopicsAction()
   }
 
   public setDispatch(dispatch: ReduxDispatch<ActionType>) {
     this.app.setDispatch(dispatch)
-    this.board.setDispatch(dispatch)
+    this.boards.setDispatch(dispatch)
     this.itemText.setDispatch(dispatch)
     this.sandbox.setDispatch(dispatch)
     this.topicAdd.setDispatch(dispatch)
-    this.topicList.setDispatch(dispatch)
+    this.topics.setDispatch(dispatch)
   }
 }

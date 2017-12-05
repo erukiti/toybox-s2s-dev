@@ -3,13 +3,13 @@ import * as React from 'react'
 import { Box, Flex, Provider } from 'rebass'
 
 // import TopicReference from '../../components/topic-reference'
-import Board from '../board'
-import BoardPane from '../board/pane'
+import Board from '../boards'
+import BoardPane from '../boards/pane'
 import { connector, Props } from '../connector'
 import Sandbox from '../sandbox'
 import TopicAdd from '../topic-add'
-import TopicList from '../topic-list'
-import TopicPane from '../topic-list/pane'
+import Topics from '../topics'
+import TopicPane from '../topics/pane'
 
 class AppComponent extends React.Component<Props> {
   public render() {
@@ -46,7 +46,7 @@ class AppComponent extends React.Component<Props> {
     panes.push(
       <Box w={0.3} mx={2} style={style}>
         <TopicAdd />
-        <TopicList />
+        <Topics />
         <hr />
         <Board />
       </Box>

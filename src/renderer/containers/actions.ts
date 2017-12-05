@@ -4,6 +4,7 @@ import { Dispatch as ReduxDispatch } from 'redux'
 export type ActionType =
   | { type: 'APP_ADD_PANE'; payload: {} }
   | { type: 'APP_OPEN'; payload: { paneIndex: number; mode: string; uuid: string } }
+  | { type: 'APP_SELECT_TAB'; payload: { paneIndex: number; tabIndex: number } }
   | { type: 'BOARDS_LOAD'; payload: { boards: any[] } }
   | { type: 'BOARDS_CREATE'; payload: { board: any } }
   | { type: 'BOARDS_EDIT_LABEL'; payload: { uuid: string; label: string } }
@@ -35,6 +36,7 @@ class Dispatcher {
   public app: {
     addPane: () => void
     open: (paneIndex: number, mode: string, uuid: string) => void
+    selectTab: (paneIndex: number, tabIndex: number) => void
   }
   public boards: {
     load: (boards: any[]) => void
@@ -71,7 +73,9 @@ class Dispatcher {
     this.app = {
       addPane: () => this._dispatch({ type: 'APP_ADD_PANE', payload: {} }),
       open: (paneIndex: number, mode: string, uuid: string) =>
-        this._dispatch({ type: 'APP_OPEN', payload: { paneIndex, mode, uuid } })
+        this._dispatch({ type: 'APP_OPEN', payload: { paneIndex, mode, uuid } }),
+      selectTab: (paneIndex: number, tabIndex: number) =>
+        this._dispatch({ type: 'APP_SELECT_TAB', payload: { paneIndex, tabIndex } })
     }
     this.boards = {
       load: (boards: any[]) => this._dispatch({ type: 'BOARDS_LOAD', payload: { boards } }),
@@ -132,6 +136,9 @@ export class AppDispatchAction extends DispatchAction {
   }
   public open(paneIndex: number, mode: string, uuid: string) {
     this._dispatch.app.open(paneIndex, mode, uuid)
+  }
+  public selectTab(paneIndex: number, tabIndex: number) {
+    this._dispatch.app.selectTab(paneIndex, tabIndex)
   }
 }
 

@@ -31,6 +31,9 @@ class ItemTextComponent extends React.Component<Props & OwnProps> {
             value={item.text}
             focus={true}
             wrapEnabled={true}
+            editorProps={{
+              $blockScrolling: Infinity
+            }}
           />
         </Box>
       </Flex>

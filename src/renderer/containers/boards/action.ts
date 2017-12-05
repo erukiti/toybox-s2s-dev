@@ -7,8 +7,17 @@ import { Board } from '../../../types'
 import { BoardsDispatchAction } from '../actions'
 
 export class BoardsAction extends BoardsDispatchAction {
+  private _prev = null
   public _first() {
     this._dispatch.boards.load(repositories.board.get())
+    store.subscribe(() => {
+      const state = store.getState()
+      if (this._prev && this._prev.boards !== state.boards) {
+        repositories.board.allUpdate(state.boards.boards)
+      }
+
+      this._prev = state
+    })
   }
 
   public create() {

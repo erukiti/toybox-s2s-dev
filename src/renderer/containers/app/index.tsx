@@ -1,6 +1,6 @@
 import * as assert from 'assert'
 import * as React from 'react'
-import { Box, Flex, Provider } from 'rebass'
+import { Box, Flex, Provider, TabItem, Tabs } from 'rebass'
 
 // import TopicReference from '../../components/topic-reference'
 import Board from '../boards'
@@ -21,28 +21,46 @@ class AppComponent extends React.Component<Props> {
 
     const style = { height: '100vh' }
 
-    const panes = this.props.app.panes.map(pane => {
+    const panes = this.props.app.panes.map((pane, paneIndex) => {
       if (pane.tabs.length === 0) {
         return <Box w={1} />
       }
       const tab = pane.tabs[pane.index]
-      switch (tab.mode) {
-        case 'board': {
-          return (
-            <Box w={1} style={style}>
-              <BoardPane uuid={tab.uuid} />
-            </Box>
-          )
+      let p
+      const tabs = pane.tabs.map((v, index) => {
+        let name
+        switch (v.mode) {
+          case 'board': {
+            name = this.props.boards.boards.find(board => board.uuid === v.uuid).label
+            if (index === pane.index) {
+              p = <BoardPane uuid={tab.uuid} />
+            }
+            break
+          }
+          case 'topic': {
+            name = this.props.topics.topics.find(topic => topic.uuid === v.uuid).label
+            if (index === pane.index) {
+              p = <TopicPane uuid={tab.uuid} />
+            }
+            break
+          }
         }
-        case 'topic': {
-          return (
-            <Box w={1} style={style}>
-              <TopicPane uuid={tab.uuid} />
-            </Box>
-          )
+
+        if (index === pane.index) {
+          return <TabItem active children={name} key={v.uuid} />
+        } else {
+          return <TabItem children={name} onClick={() => this.props.act.app.selectTab(paneIndex, index)} key={v.uuid} />
         }
-      }
+      })
+
+      return (
+        <Box w={1} style={style}>
+          <Tabs>{tabs}</Tabs>
+          {p}
+        </Box>
+      )
     })
+
     panes.push(
       <Box w={0.3} mx={2} style={style}>
         <TopicAdd />

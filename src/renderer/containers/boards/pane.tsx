@@ -19,7 +19,7 @@ class BoardPane extends React.Component<Props & OwnProps> {
       const checked = board.topicIds.includes(topic.uuid)
       return (
         <span key={topic.uuid}>
-          <Checkbox checked={checked} onClick={() => act.boards.changeTopicsIds(uuid, topic.uuid)} />
+          <Checkbox checked={checked} onChange={() => act.boards.changeTopicsIds(uuid, topic.uuid)} />
           {topic.label}
         </span>
       )

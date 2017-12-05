@@ -30,21 +30,38 @@ const addPane = (_state: AppState): AppState => {
 }
 
 const open = (_state: AppState, paneIndex: number, mode: string, uuid: string): AppState => {
-  const tabs = [
-    ..._state.panes[paneIndex].tabs,
-    {
-      mode,
-      uuid
+  const panes = [..._state.panes]
+
+  const tabIndex = _state.panes[paneIndex].tabs.findIndex(tab => tab.uuid === uuid)
+
+  if (tabIndex >= 0) {
+    panes[paneIndex].index = tabIndex
+  } else {
+    const tabs = [
+      ..._state.panes[paneIndex].tabs,
+      {
+        mode,
+        uuid
+      }
+    ]
+    panes[paneIndex] = {
+      tabs,
+      index: tabs.length - 1
     }
-  ]
-  const pane = {
-    tabs,
-    index: tabs.length - 1
   }
-  console.log([..._state.panes.splice(0, paneIndex)], pane, [..._state.panes.splice(paneIndex + 1)])
+
   return {
     ..._state,
-    panes: [..._state.panes.splice(0, paneIndex), pane, ..._state.panes.splice(paneIndex + 1)]
+    panes
+  }
+}
+
+const selectTab = (_state: AppState, paneIndex: number, tabIndex: number): AppState => {
+  const panes = [..._state.panes]
+  panes[paneIndex].index = tabIndex
+  return {
+    ..._state,
+    panes
   }
 }
 
@@ -55,6 +72,9 @@ export default function AppReducer(state: AppState = initialState, action: Actio
 
     case 'APP_OPEN':
       return open(state, action.payload.paneIndex, action.payload.mode, action.payload.uuid)
+
+    case 'APP_SELECT_TAB':
+      return selectTab(state, action.payload.paneIndex, action.payload.tabIndex)
 
     default:
       return state

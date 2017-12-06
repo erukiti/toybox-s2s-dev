@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button } from 'rebass'
+import { Badge, Button } from 'rebass'
 
 import { getAcePluginNames, requireAllAcePlugins } from '../../utils'
 import { connector, Props } from '../connector'
@@ -10,7 +10,7 @@ class Items extends React.Component<Props> {
       return (
         <div key={item.uuid} onClick={() => this.props.act.itemText.start(item.uuid)}>
           <span>{item.label}</span>
-          <span>{item.lang}</span>
+          <Badge>{item.lang}</Badge>
         </div>
       )
     })

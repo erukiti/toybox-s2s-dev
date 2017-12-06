@@ -19,6 +19,13 @@ export class ItemTextAction extends ItemTextDispatchAction {
     })
   }
 
+  public start(uuid?: string) {
+    if (!uuid) {
+      uuid = this.create()
+    }
+    this._dispatch.app.open(0, 'item', uuid)
+  }
+
   public create(lang: string = 'markdown') {
     const uuid = uuidv4()
     const item: Item = {

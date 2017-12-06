@@ -6,6 +6,8 @@ import { Box, Flex, Provider, TabItem, Tabs } from 'rebass'
 import Board from '../boards'
 import BoardPane from '../boards/pane'
 import { connector, Props } from '../connector'
+import Items from '../item-text'
+import ItemPane from '../item-text/pane'
 import Sandbox from '../sandbox'
 import TopicAdd from '../topic-add'
 import Topics from '../topics'
@@ -44,6 +46,12 @@ class AppComponent extends React.Component<Props> {
             }
             break
           }
+          case 'item': {
+            name = this.props.itemText.items.find(item => item.uuid === v.uuid).label
+            if (index === pane.index) {
+              p = <ItemPane uuid={tab.uuid} />
+            }
+          }
         }
 
         if (index === pane.index) {
@@ -66,7 +74,7 @@ class AppComponent extends React.Component<Props> {
         <TopicAdd />
         <Topics />
         <hr />
-        <Board />
+        <Items />
       </Box>
     )
 

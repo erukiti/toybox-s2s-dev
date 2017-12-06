@@ -1,44 +1,29 @@
 import * as React from 'react'
-import Editor from 'react-ace'
-import { Box, Flex, Input, Select } from 'rebass'
+import { Button } from 'rebass'
 
 import { getAcePluginNames, requireAllAcePlugins } from '../../utils'
 import { connector, Props } from '../connector'
 
-requireAllAcePlugins()
-const { mode } = getAcePluginNames()
-
-interface OwnProps {
-  uuid: string
-}
-class ItemTextComponent extends React.Component<Props & OwnProps> {
+class Items extends React.Component<Props> {
   public render() {
-    const { itemText, uuid, act } = this.props
-    const item = itemText[uuid]
+    console.log(this.props.itemText.items)
+    const items = this.props.itemText.items.map(item => {
+      return (
+        <div key={item.uuid}>
+          <span>{item.label}</span>
+          <span>{item.lang}</span>
+          <Button onClick={() => this.props.act.itemText.start(item.uuid)}>Edit</Button>
+        </div>
+      )
+    })
+
     return (
-      <Flex direction="column" style={{ height: '100%' }}>
-        <Box>
-          <Input value={item.label} onChange={v => act.itemText.editLabel(uuid, v)} />
-          <Select onChange={v => act.itemText.editLang(uuid, v)}>{mode.map(lang => <option>lang</option>)}</Select>
-        </Box>
-        <Box flex={1}>
-          <Editor
-            mode={item.lang}
-            theme="textmate"
-            width="100%"
-            height="100%"
-            onChange={v => act.itemText.editText(uuid, v)}
-            value={item.text}
-            focus={true}
-            wrapEnabled={true}
-            editorProps={{
-              $blockScrolling: Infinity
-            }}
-          />
-        </Box>
-      </Flex>
+      <div>
+        <Button onClick={() => this.props.act.itemText.start()}>NEW</Button>
+        {items}
+      </div>
     )
   }
 }
 
-export default connector(ItemTextComponent)
+export default connector(Items)

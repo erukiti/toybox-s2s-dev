@@ -50,6 +50,22 @@ const editLang = (_state: ItemTextState, uuid: string, lang: string): ItemTextSt
   }
 }
 
+const changeTopicsIds = (_state: ItemTextState, uuid: string, topicId: string): ItemTextState => {
+  const item = _state.items.find(v => v.uuid === uuid)
+
+  let topicIds
+
+  if (item.topicIds.includes(topicId)) {
+    topicIds = item.topicIds.filter(v => v !== topicId)
+  } else {
+    topicIds = [...item.topicIds, topicId]
+  }
+
+  return {
+    items: changeProperty(_state.items, uuid, 'topicIds', topicIds)
+  }
+}
+
 export default function ItemTextReducer(state: ItemTextState = initialState, action: ActionType): ItemTextState {
   switch (action.type) {
     case 'ITEM_TEXT_LOAD':
@@ -66,6 +82,9 @@ export default function ItemTextReducer(state: ItemTextState = initialState, act
 
     case 'ITEM_TEXT_EDIT_LANG':
       return editLang(state, action.payload.uuid, action.payload.lang)
+
+    case 'ITEM_TEXT_CHANGE_TOPICS_IDS':
+      return changeTopicsIds(state, action.payload.uuid, action.payload.topicId)
 
     default:
       return state

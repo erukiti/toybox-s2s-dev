@@ -1,7 +1,7 @@
 import * as assert from 'assert'
 import * as React from 'react'
 import Editor from 'react-ace'
-import { Box, Flex, Input, Select } from 'rebass'
+import { Box, Checkbox, Flex, Input, Select } from 'rebass'
 
 import { getAcePluginNames, requireAllAcePlugins } from '../../utils'
 import { connector, Props } from '../connector'
@@ -14,26 +14,31 @@ interface OwnProps {
 }
 class ItemText extends React.Component<Props & OwnProps> {
   public render() {
-    const { itemText, uuid, act } = this.props
+    const { itemText, uuid, act, topics } = this.props
     const item = itemText.items.find(v => v.uuid === uuid)
     assert(item)
-    const modes = mode.map(lang => {
-      if (lang === item.lang) {
-        return (
-          <option key={lang} selected>
-            {lang}
-          </option>
-        )
-      } else {
-        return <option key={lang}>{lang}</option>
-      }
+    const topicIds = topics.topics.map(topic => {
+      const checked = item.topicIds.includes(topic.uuid)
+      return (
+        <span key={topic.uuid}>
+          <Checkbox checked={checked} onChange={() => act.itemText.changeTopicsIds(uuid, topic.uuid)} />
+          {topic.label}
+        </span>
+      )
     })
+    const modes = mode.map(lang => <option key={lang}>{lang}</option>)
 
     return (
       <Flex direction="column" style={{ height: '100%' }}>
         <Box>
+          {topicIds}
           <Input value={item.label} onChange={ev => act.itemText.editLabel(uuid, ev.target.value)} />
-          <Select onChange={v => act.itemText.editLang(uuid, v)}>{modes}</Select>
+          <div>
+            <span>lang: </span>
+            <Select onChange={v => act.itemText.editLang(uuid, v)} value={item.lang}>
+              {modes}
+            </Select>
+          </div>
         </Box>
         <Box flex={1}>
           <Editor

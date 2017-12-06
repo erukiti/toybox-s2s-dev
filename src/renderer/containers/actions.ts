@@ -15,6 +15,7 @@ export type ActionType =
   | { type: 'ITEM_TEXT_EDIT_LABEL'; payload: { uuid: string; label: string } }
   | { type: 'ITEM_TEXT_EDIT_TEXT'; payload: { uuid: string; text: string } }
   | { type: 'ITEM_TEXT_EDIT_LANG'; payload: { uuid: string; lang: string } }
+  | { type: 'ITEM_TEXT_CHANGE_TOPICS_IDS'; payload: { uuid: string; topicId: string } }
   | { type: 'SANDBOX_EDIT_CODE'; payload: { code: string } }
   | { type: 'SANDBOX_RUN'; payload: { count: number; result: string; date: number } }
   | { type: 'TOPIC_ADD_EDIT_LABEL'; payload: { label: string } }
@@ -51,6 +52,7 @@ class Dispatcher {
     editLabel: (uuid: string, label: string) => void
     editText: (uuid: string, text: string) => void
     editLang: (uuid: string, lang: string) => void
+    changeTopicsIds: (uuid: string, topicId: string) => void
   }
   public sandbox: {
     editCode: (code: string) => void
@@ -93,7 +95,10 @@ class Dispatcher {
         this._dispatch({ type: 'ITEM_TEXT_EDIT_LABEL', payload: { uuid, label } }),
       editText: (uuid: string, text: string) =>
         this._dispatch({ type: 'ITEM_TEXT_EDIT_TEXT', payload: { uuid, text } }),
-      editLang: (uuid: string, lang: string) => this._dispatch({ type: 'ITEM_TEXT_EDIT_LANG', payload: { uuid, lang } })
+      editLang: (uuid: string, lang: string) =>
+        this._dispatch({ type: 'ITEM_TEXT_EDIT_LANG', payload: { uuid, lang } }),
+      changeTopicsIds: (uuid: string, topicId: string) =>
+        this._dispatch({ type: 'ITEM_TEXT_CHANGE_TOPICS_IDS', payload: { uuid, topicId } })
     }
     this.sandbox = {
       editCode: (code: string) => this._dispatch({ type: 'SANDBOX_EDIT_CODE', payload: { code } }),
@@ -175,6 +180,9 @@ export class ItemTextDispatchAction extends DispatchAction {
   }
   public editLang(uuid: string, lang: string) {
     this._dispatch.itemText.editLang(uuid, lang)
+  }
+  public changeTopicsIds(uuid: string, topicId: string) {
+    this._dispatch.itemText.changeTopicsIds(uuid, topicId)
   }
 }
 

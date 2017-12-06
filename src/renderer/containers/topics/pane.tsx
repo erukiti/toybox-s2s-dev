@@ -32,6 +32,9 @@ class TopicsPane extends React.Component<Props & OwnProps> {
             height="100%"
             focus={true}
             wrapEnabled={true}
+            editorProps={{
+              $blockScrolling: Infinity
+            }}
           />
         </Box>
       </Flex>

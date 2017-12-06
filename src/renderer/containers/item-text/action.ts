@@ -35,7 +35,8 @@ export class ItemTextAction extends ItemTextDispatchAction {
       createdAt: 0,
       updatedAt: 0,
       lang,
-      text: ''
+      text: '',
+      topicIds: []
     }
     this._dispatch.itemText.create(item)
     return item.uuid

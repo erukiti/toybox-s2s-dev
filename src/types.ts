@@ -20,6 +20,8 @@ export interface Board extends Storable {
 }
 
 export interface Item extends Storable {
+  topicIds: string[]
+
   [props: string]: any
 }
 

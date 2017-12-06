@@ -6,13 +6,11 @@ import { connector, Props } from '../connector'
 
 class Items extends React.Component<Props> {
   public render() {
-    console.log(this.props.itemText.items)
     const items = this.props.itemText.items.map(item => {
       return (
-        <div key={item.uuid}>
+        <div key={item.uuid} onClick={() => this.props.act.itemText.start(item.uuid)}>
           <span>{item.label}</span>
           <span>{item.lang}</span>
-          <Button onClick={() => this.props.act.itemText.start(item.uuid)}>Edit</Button>
         </div>
       )
     })

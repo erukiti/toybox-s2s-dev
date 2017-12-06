@@ -5,10 +5,8 @@ class TopicListComponent extends React.Component<Props> {
   public render() {
     const topics = this.props.topics.topics.map(topic => {
       return (
-        <div key={topic.uuid}>
+        <div key={topic.uuid} onClick={() => this.props.act.topics.startRef(topic.uuid)}>
           <span>{topic.label}</span>
-          <button onClick={() => this.props.act.topics.remove(topic.uuid)}>remove</button>
-          <button onClick={() => this.props.act.topics.startRef(topic.uuid)}>ref</button>
         </div>
       )
     })

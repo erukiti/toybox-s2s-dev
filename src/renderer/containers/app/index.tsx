@@ -35,21 +35,21 @@ class AppComponent extends React.Component<Props> {
           case 'board': {
             name = this.props.boards.boards.find(board => board.uuid === v.uuid).label
             if (index === pane.index) {
-              p = <BoardPane uuid={tab.uuid} />
+              p = BoardPane
             }
             break
           }
           case 'topic': {
             name = this.props.topics.topics.find(topic => topic.uuid === v.uuid).label
             if (index === pane.index) {
-              p = <TopicPane uuid={tab.uuid} />
+              p = TopicPane
             }
             break
           }
           case 'item': {
             name = this.props.itemText.items.find(item => item.uuid === v.uuid).label
             if (index === pane.index) {
-              p = <ItemPane uuid={tab.uuid} />
+              p = ItemPane
             }
           }
         }
@@ -62,19 +62,21 @@ class AppComponent extends React.Component<Props> {
       })
 
       return (
-        <Box w={1} style={style}>
-          <Tabs>{tabs}</Tabs>
-          {p}
+        <Box w={1}>
+          <Flex direction="column" style={style}>
+            <Tabs>{tabs}</Tabs>
+            <Box is={p} uuid={tab.uuid} flex="1" />
+          </Flex>
         </Box>
       )
     })
 
     panes.push(
       <Box w={0.3} mx={2} style={style}>
-        <TopicAdd />
-        <Topics />
+        <Box is={TopicAdd} />
+        <Box is={Topics} />
         <hr />
-        <Items />
+        <Box is={Items} />
       </Box>
     )
 

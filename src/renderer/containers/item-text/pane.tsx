@@ -40,21 +40,23 @@ class ItemText extends React.Component<Props & OwnProps> {
             </Select>
           </div>
         </Box>
-        <Box flex={1}>
-          <Editor
-            mode={item.lang}
-            theme="textmate"
-            width="100%"
-            height="100%"
-            onChange={v => act.itemText.editText(uuid, v)}
-            value={item.text}
-            focus={true}
-            wrapEnabled={true}
-            editorProps={{
-              $blockScrolling: Infinity
-            }}
-          />
-        </Box>
+        <Box
+          flex="1"
+          is={Editor}
+          mode={item.lang}
+          theme="textmate"
+          width="100%"
+          height="100%"
+          onChange={v => act.itemText.editText(uuid, v)}
+          value={item.text}
+          focus={true}
+          wrapEnabled={true}
+          tabSize={2}
+          showPrintMargin={false}
+          editorProps={{
+            $blockScrolling: Infinity
+          }}
+        />
       </Flex>
     )
   }

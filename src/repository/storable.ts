@@ -1,4 +1,5 @@
 import { Storable } from '../types'
+const sha256 = require('sha256')
 
 export class Repository<T extends Storable> {
   private _data: T[]
@@ -31,7 +32,25 @@ export class Repository<T extends Storable> {
   // }
 
   public allUpdate(allData: T[]) {
-    this._data = allData
+    const ignores = ['rev', 'createdAt', 'updatedAt']
+
+    this._data = allData.map(data => {
+      const prev = data.rev
+      if (data.createdAt === 0) {
+        data.updatedAt = data.createdAt = Date.now()
+      }
+
+      const seed = Object.keys(data)
+        .filter(key => !ignores.includes(key))
+        .sort()
+        .map(key => `${key}:${data[key]}`)
+        .join(',')
+      data.rev = sha256(seed)
+      if (prev !== data.rev) {
+        data.updatedAt = Date.now()
+      }
+      return data
+    })
     this._onUpdate(this._data)
   }
 

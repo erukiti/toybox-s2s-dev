@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import * as childProcess from 'child_process'
 import { Configuration, Linter } from 'tslint'
 const prettier = require('prettier')
 
@@ -45,3 +46,18 @@ export const toUpperSnakeCase = s =>
     .replace(/[A-Z]/g, matched => `_${matched}`)
     .toUpperCase()
     .replace('-', '_')
+
+export const readNpmVersion = name => {
+  let output = ''
+  try {
+    output = childProcess.execSync('npm list --depth=0').toString()
+  } catch (e) {
+    output = e.output.toString()
+  }
+  const ind = output.indexOf(`${name}@`)
+  if (ind !== -1) {
+    return output.substr(ind + name.length + 1).split('\n')[0]
+  } else {
+    return null
+  }
+}

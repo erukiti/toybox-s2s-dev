@@ -9,15 +9,34 @@ export interface ItemText extends Item {
   lang: string
   text: string
 }
+export interface SortRule {
+  isAsc: boolean
+  orderType: 'createdAt' | 'updatedAt' | 'label'
+}
+export interface FilterRule {
+  nameFilter: string
+  topicFilter: string
+}
 export interface ItemTextState {
   items: ItemText[]
+  sortRule: SortRule
+  filterRule: FilterRule
 }
 const initialState: ItemTextState = {
-  items: []
+  items: [],
+  sortRule: {
+    isAsc: false,
+    orderType: 'createdAt'
+  },
+  filterRule: {
+    nameFilter: '',
+    topicFilter: ''
+  }
 }
 
 const load = (_state: ItemTextState, items: any[]): ItemTextState => {
   return {
+    ..._state,
     items
   }
 }
@@ -25,6 +44,7 @@ const load = (_state: ItemTextState, items: any[]): ItemTextState => {
 const create = (_state: ItemTextState, item: any): ItemTextState => {
   assert(!_state.items.find(v => v.uuid === item.uuid))
   return {
+    ..._state,
     items: [..._state.items, item]
   }
 }
@@ -32,6 +52,7 @@ const create = (_state: ItemTextState, item: any): ItemTextState => {
 const editLabel = (_state: ItemTextState, uuid: string, label: string): ItemTextState => {
   const items = changeProperty(_state.items, uuid, 'label', label)
   return {
+    ..._state,
     items
   }
 }
@@ -39,6 +60,7 @@ const editLabel = (_state: ItemTextState, uuid: string, label: string): ItemText
 const editText = (_state: ItemTextState, uuid: string, text: string): ItemTextState => {
   const items = changeProperty(_state.items, uuid, 'text', text)
   return {
+    ..._state,
     items
   }
 }
@@ -46,6 +68,7 @@ const editText = (_state: ItemTextState, uuid: string, text: string): ItemTextSt
 const editLang = (_state: ItemTextState, uuid: string, lang: string): ItemTextState => {
   const items = changeProperty(_state.items, uuid, 'lang', lang)
   return {
+    ..._state,
     items
   }
 }
@@ -62,7 +85,52 @@ const changeTopicsIds = (_state: ItemTextState, uuid: string, topicId: string): 
   }
 
   return {
+    ..._state,
     items: changeProperty(_state.items, uuid, 'topicIds', topicIds)
+  }
+}
+
+const setSortType = (_state: ItemTextState, sortType: any): ItemTextState => {
+  const sortRule = {
+    ..._state.sortRule,
+    orderType: sortType
+  }
+  return {
+    ..._state,
+    sortRule
+  }
+}
+
+const setSortIsAsc = (_state: ItemTextState, isAsc: boolean): ItemTextState => {
+  const sortRule = {
+    ..._state.sortRule,
+    isAsc
+  }
+  return {
+    ..._state,
+    sortRule
+  }
+}
+
+const editNameFilter = (_state: ItemTextState, nameFilter: string): ItemTextState => {
+  const filterRule = {
+    ..._state.filterRule,
+    nameFilter
+  }
+  return {
+    ..._state,
+    filterRule
+  }
+}
+
+const editTopicFilter = (_state: ItemTextState, topicFilter: string): ItemTextState => {
+  const filterRule = {
+    ..._state.filterRule,
+    topicFilter
+  }
+  return {
+    ..._state,
+    filterRule
   }
 }
 
@@ -85,6 +153,18 @@ export default function ItemTextReducer(state: ItemTextState = initialState, act
 
     case 'ITEM_TEXT_CHANGE_TOPICS_IDS':
       return changeTopicsIds(state, action.payload.uuid, action.payload.topicId)
+
+    case 'ITEM_TEXT_SET_SORT_TYPE':
+      return setSortType(state, action.payload.sortType)
+
+    case 'ITEM_TEXT_SET_SORT_IS_ASC':
+      return setSortIsAsc(state, action.payload.isAsc)
+
+    case 'ITEM_TEXT_EDIT_NAME_FILTER':
+      return editNameFilter(state, action.payload.nameFilter)
+
+    case 'ITEM_TEXT_EDIT_TOPIC_FILTER':
+      return editTopicFilter(state, action.payload.topicFilter)
 
     default:
       return state

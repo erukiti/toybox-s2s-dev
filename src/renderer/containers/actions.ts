@@ -16,6 +16,10 @@ export type ActionType =
   | { type: 'ITEM_TEXT_EDIT_TEXT'; payload: { uuid: string; text: string } }
   | { type: 'ITEM_TEXT_EDIT_LANG'; payload: { uuid: string; lang: string } }
   | { type: 'ITEM_TEXT_CHANGE_TOPICS_IDS'; payload: { uuid: string; topicId: string } }
+  | { type: 'ITEM_TEXT_SET_SORT_TYPE'; payload: { sortType: any } }
+  | { type: 'ITEM_TEXT_SET_SORT_IS_ASC'; payload: { isAsc: boolean } }
+  | { type: 'ITEM_TEXT_EDIT_NAME_FILTER'; payload: { nameFilter: string } }
+  | { type: 'ITEM_TEXT_EDIT_TOPIC_FILTER'; payload: { topicFilter: string } }
   | { type: 'SANDBOX_EDIT_CODE'; payload: { code: string } }
   | { type: 'SANDBOX_RUN'; payload: { count: number; result: string; date: number } }
   | { type: 'TOPIC_ADD_EDIT_LABEL'; payload: { label: string } }
@@ -53,6 +57,10 @@ class Dispatcher {
     editText: (uuid: string, text: string) => void
     editLang: (uuid: string, lang: string) => void
     changeTopicsIds: (uuid: string, topicId: string) => void
+    setSortType: (sortType: any) => void
+    setSortIsAsc: (isAsc: boolean) => void
+    editNameFilter: (nameFilter: string) => void
+    editTopicFilter: (topicFilter: string) => void
   }
   public sandbox: {
     editCode: (code: string) => void
@@ -98,7 +106,13 @@ class Dispatcher {
       editLang: (uuid: string, lang: string) =>
         this._dispatch({ type: 'ITEM_TEXT_EDIT_LANG', payload: { uuid, lang } }),
       changeTopicsIds: (uuid: string, topicId: string) =>
-        this._dispatch({ type: 'ITEM_TEXT_CHANGE_TOPICS_IDS', payload: { uuid, topicId } })
+        this._dispatch({ type: 'ITEM_TEXT_CHANGE_TOPICS_IDS', payload: { uuid, topicId } }),
+      setSortType: (sortType: any) => this._dispatch({ type: 'ITEM_TEXT_SET_SORT_TYPE', payload: { sortType } }),
+      setSortIsAsc: (isAsc: boolean) => this._dispatch({ type: 'ITEM_TEXT_SET_SORT_IS_ASC', payload: { isAsc } }),
+      editNameFilter: (nameFilter: string) =>
+        this._dispatch({ type: 'ITEM_TEXT_EDIT_NAME_FILTER', payload: { nameFilter } }),
+      editTopicFilter: (topicFilter: string) =>
+        this._dispatch({ type: 'ITEM_TEXT_EDIT_TOPIC_FILTER', payload: { topicFilter } })
     }
     this.sandbox = {
       editCode: (code: string) => this._dispatch({ type: 'SANDBOX_EDIT_CODE', payload: { code } }),
@@ -183,6 +197,18 @@ export class ItemTextDispatchAction extends DispatchAction {
   }
   public changeTopicsIds(uuid: string, topicId: string) {
     this._dispatch.itemText.changeTopicsIds(uuid, topicId)
+  }
+  public setSortType(sortType: any) {
+    this._dispatch.itemText.setSortType(sortType)
+  }
+  public setSortIsAsc(isAsc: boolean) {
+    this._dispatch.itemText.setSortIsAsc(isAsc)
+  }
+  public editNameFilter(nameFilter: string) {
+    this._dispatch.itemText.editNameFilter(nameFilter)
+  }
+  public editTopicFilter(topicFilter: string) {
+    this._dispatch.itemText.editTopicFilter(topicFilter)
   }
 }
 

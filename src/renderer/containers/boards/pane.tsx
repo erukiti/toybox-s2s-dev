@@ -11,61 +11,59 @@ interface OwnProps {
   uuid: string
 }
 
-class BoardPane extends React.Component<Props & OwnProps> {
-  public render() {
-    const { uuid, topics, act, itemText } = this.props
-    const board = this.props.boards.boards.find(v => v.uuid === uuid)
-    const topicIds = topics.topics.map(topic => {
-      const checked = board.topicIds.includes(topic.uuid)
-      return (
-        <span key={topic.uuid}>
-          <Checkbox checked={checked} onChange={() => act.boards.changeTopicsIds(uuid, topic.uuid)} />
-          {topic.label}
-        </span>
-      )
-    })
-
-    const items = board.itemIds.map(itemId => {
-      const item = itemText.items.find(v => v.uuid === itemId)
-      const showGutter = item.lang !== 'markdown'
-      return (
-        <Box key={itemId}>
-          <Editor
-            onChange={v => act.itemText.editText(itemId, v)}
-            value={item.text}
-            mode={item.lang}
-            theme="textmate"
-            minLines={10}
-            width="100%"
-            height="300px"
-            wrapEnabled={true}
-            showGutter={showGutter}
-          />
-        </Box>
-      )
-    })
-
-    const handleAddItemText = () => {
-      const itemId = act.itemText.create('markdown')
-      act.boards.addItem(uuid, itemId)
-    }
-
+const boardPaneRender: React.StatelessComponent<Props & OwnProps> = props => {
+  const { uuid, topics, act, itemText } = props
+  const board = props.boards.boards.find(v => v.uuid === uuid)
+  const topicIds = topics.topics.map(topic => {
+    const checked = board.topicIds.includes(topic.uuid)
     return (
-      // <Flex direction="column" style={{ height: '100%' }}>
-      <Box>
-        <Box>
-          <span>ボード</span>
-          <span>{topicIds}</span>
-          <Input value={board.label} onChange={ev => this.props.act.boards.editLabel(uuid, ev.target.value)} />
-        </Box>
-        {items}
-        <Box>
-          <Button onClick={() => handleAddItemText()} children={'ADD'} />
-        </Box>
-      </Box>
-      // </Flex>
+      <span key={topic.uuid}>
+        <Checkbox checked={checked} onChange={() => act.boards.changeTopicsIds(uuid, topic.uuid)} />
+        {topic.label}
+      </span>
     )
+  })
+
+  const items = board.itemIds.map(itemId => {
+    const item = itemText.items.find(v => v.uuid === itemId)
+    const showGutter = item.lang !== 'markdown'
+    return (
+      <Box key={itemId}>
+        <Editor
+          onChange={v => act.itemText.editText(itemId, v)}
+          value={item.text}
+          mode={item.lang}
+          theme="textmate"
+          minLines={10}
+          width="100%"
+          height="300px"
+          wrapEnabled={true}
+          showGutter={showGutter}
+        />
+      </Box>
+    )
+  })
+
+  const handleAddItemText = () => {
+    const itemId = act.itemText.create('markdown')
+    act.boards.addItem(uuid, itemId)
   }
+
+  return (
+    // <Flex direction="column" style={{ height: '100%' }}>
+    <Box>
+      <Box>
+        <span>ボード</span>
+        <span>{topicIds}</span>
+        <Input value={board.label} onChange={ev => props.act.boards.editLabel(uuid, ev.target.value)} />
+      </Box>
+      {items}
+      <Box>
+        <Button onClick={() => handleAddItemText()} children={'ADD'} />
+      </Box>
+    </Box>
+    // </Flex>
+  )
 }
 
-export default connector(BoardPane)
+export default connector(boardPaneRender)

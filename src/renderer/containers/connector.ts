@@ -7,7 +7,7 @@ import { State } from './reducers'
 export type Props = State & { act: Actions }
 
 let isFirst = true
-export const connector = <T>(component) => {
+export const connector = <T>(component: React.StatelessComponent<T>) => {
   const mapStateToProps = (state: State) => {
     return state
   }

@@ -81,7 +81,8 @@ const appRender: React.StatelessComponent<Props> = props => {
 
   return (
     <Provider theme={theme}>
-      <Flex>{panes.map((pane, index) => ({ ...pane, key: index }))}</Flex>
+      <Sandbox />
+      {/* <Flex>{panes.map((pane, index) => ({ ...pane, key: index }))}</Flex> */}
     </Provider>
   )
 }

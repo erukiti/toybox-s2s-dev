@@ -33,6 +33,7 @@ const metaRuleHandler = (code, { eventPath, plugin: opts, filename: inputFilenam
   const outputType = outputTypes.find(type => plugin.outputTypes.indexOf(type) !== -1)
 
   const output = plugin.func(sourceTypes[inputType](), inputFilename, inputType, outputType)
+  // const output = plugin.func(sourceTypes[inputType](), path.resolve(inputFilename), inputType, outputType)
 
   switch (outputType) {
     case '.ts': {

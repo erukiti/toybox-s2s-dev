@@ -27,7 +27,9 @@ const initialState: ${upperName}State = {
 
 }
 
-export default function ${upperName}Reducer(state: ${upperName}State = initialState, action: ActionType): ${upperName}State {
+export default function ${upperName}Reducer(state: ${upperName}State = initialState, action: ActionType): ${
+      upperName
+    }State {
   switch (action.type) {
     default: return state
   }

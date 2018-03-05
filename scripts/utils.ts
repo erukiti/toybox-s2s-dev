@@ -1,5 +1,5 @@
-import * as fs from 'fs'
 import * as childProcess from 'child_process'
+import * as fs from 'fs'
 import { Configuration, Linter } from 'tslint'
 const prettier = require('prettier')
 
